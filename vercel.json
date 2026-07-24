@@ -1,0 +1,10 @@
+{
+  "buildCommand": "node _build/build.js",
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/Homeweavers_Workspace.html"
+    }
+  ]
+}
