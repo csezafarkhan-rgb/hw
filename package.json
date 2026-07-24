@@ -1,0 +1,20 @@
+{
+  "name": "homeweavers-workspace",
+  "version": "1.0.0",
+  "description": "Home Weavers operations workspace — 7-tab dashboard (Inventory, Products, Orders, Financial, Attendance, Data Manager, Containers) as a single-file HTML app served over Node.js.",
+  "main": "server.js",
+  "scripts": {
+    "build": "node _build/build.js",
+    "start": "node server.js",
+    "check": "node --check _build/build.js && node --check server.js && node --check _build/child_shim.js && node --check _build/login_gate.js && node --check _build/selx.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Home Weavers Inc.",
+  "license": "UNLICENSED",
+  "private": true
+}

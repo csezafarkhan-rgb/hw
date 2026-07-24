@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homeweavers · Workspace</title>
+<style>*{box-sizing:border-box;}html,body{margin:0;height:100%;}html{background:radial-gradient(1100px 760px at 8% -10%,#d8e4ff 0%,rgba(216,228,255,0) 60%),radial-gradient(980px 720px at 108% 4%,#ffe0f0 0%,rgba(255,224,240,0) 55%),radial-gradient(900px 900px at 50% 118%,#d5f6ff 0%,rgba(213,246,255,0) 60%),linear-gradient(158deg,#eef2fc 0%,#f3eefc 46%,#eaf6fc 100%) fixed;}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,sans-serif;font-size:14px;background:transparent;display:flex;flex-direction:column;height:100vh;overflow:hidden;}#topbar{display:flex;align-items:center;gap:7px;padding:9px 14px;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(26px) saturate(185%);backdrop-filter:blur(26px) saturate(185%);border-bottom:1px solid rgba(255,255,255,.6);box-shadow:0 6px 22px rgba(26,40,72,.08),inset 0 1px 0 rgba(255,255,255,.85);flex-wrap:wrap;flex:0 0 auto;z-index:10;}#topbar .brand{font-weight:800;font-size:14px;color:#1B2330;margin-right:12px;display:flex;align-items:center;gap:7px;letter-spacing:.2px;}.navbtn{border:1px solid rgba(255,255,255,.68);background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);color:#1B2330;font:600 13px 'Inter',sans-serif;padding:9px 16px;border-radius:13px;cursor:pointer;white-space:nowrap;box-shadow:0 3px 12px rgba(26,40,72,.08),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .12s ease,box-shadow .18s ease,background .18s ease;}.navbtn:hover{background:rgba(255,255,255,.74);transform:translateY(-1px);box-shadow:0 8px 20px rgba(26,40,72,.14),inset 0 1px 0 rgba(255,255,255,.95);}.navbtn.active{background:linear-gradient(180deg,#5b9bff,#3B7DF5);color:#fff;border-color:rgba(255,255,255,.4);box-shadow:0 6px 18px rgba(59,125,245,.34),inset 0 1px 0 rgba(255,255,255,.5);}#frames{position:relative;flex:1 1 auto;min-height:0;}#frames iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;display:none;}#frames iframe.active{display:block;}#splash{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#5B6472;font-size:13px;background:transparent;z-index:5;}.spin{width:26px;height:26px;border:3px solid rgba(120,135,165,.35);border-top-color:#3B7DF5;border-radius:50%;animation:sp .8s linear infinite;}@keyframes sp{to{transform:rotate(360deg);}}
+#loginGate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:radial-gradient(1100px 760px at 8% -10%,#d8e4ff 0%,rgba(216,228,255,0) 60%),radial-gradient(980px 720px at 108% 4%,#ffe0f0 0%,rgba(255,224,240,0) 55%),radial-gradient(900px 900px at 50% 118%,#d5f6ff 0%,rgba(213,246,255,0) 60%),linear-gradient(158deg,#eef2fc 0%,#f3eefc 46%,#eaf6fc 100%);transition:opacity .35s ease;}
+#loginGate.lg-out{opacity:0;pointer-events:none;}
+.lg-card{width:min(92vw,380px);padding:34px 32px 28px;border-radius:22px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(26px) saturate(185%);backdrop-filter:blur(26px) saturate(185%);border:1px solid rgba(255,255,255,.7);box-shadow:0 18px 50px rgba(26,40,72,.16),inset 0 1px 0 rgba(255,255,255,.9);}
+.lg-card h1{margin:0 0 4px;font-size:20px;font-weight:800;color:#1B2330;text-align:center;letter-spacing:.2px;}
+.lg-card .lg-sub{margin:0 0 22px;font-size:12px;color:#5B6472;text-align:center;line-height:1.5;}
+.lg-field{margin-bottom:13px;}
+.lg-field label{font-size:11px;font-weight:600;color:#5B6472;display:block;margin-bottom:5px;letter-spacing:.2px;}
+.lg-field input{width:100%;padding:11px 13px;font:500 13.5px 'Inter',sans-serif;color:#1B2330;border:1px solid rgba(120,140,180,.4);border-radius:12px;background:rgba(255,255,255,.72);outline:none;transition:border-color .15s ease,box-shadow .15s ease;}
+.lg-field input:focus{border-color:#3B7DF5;box-shadow:0 0 0 3px rgba(59,125,245,.18);}
+.lg-row{display:flex;align-items:center;gap:7px;margin:2px 0 16px;font-size:12px;color:#5B6472;user-select:none;}
+.lg-row input{width:15px;height:15px;accent-color:#3B7DF5;cursor:pointer;}
+.lg-row label{cursor:pointer;}
+#lgBtn{width:100%;padding:12px;border:0;border-radius:13px;background:linear-gradient(180deg,#5b9bff,#3B7DF5);color:#fff;font:700 14px 'Inter',sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(59,125,245,.34),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .12s ease,box-shadow .18s ease;}
+#lgBtn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(59,125,245,.42),inset 0 1px 0 rgba(255,255,255,.55);}
+#lgBtn:disabled{opacity:.65;cursor:default;transform:none;}
+#lgErr{display:none;margin:0 0 12px;padding:9px 12px;border-radius:11px;background:rgba(255,90,110,.14);border:1px solid rgba(255,90,110,.35);color:#B22A3E;font-size:12px;font-weight:600;text-align:center;}
+.lg-shake{animation:lgshake .4s ease;}
+@keyframes lgshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+#whoami{margin-left:auto;font-size:12.5px;font-weight:700;color:#1B2330;padding:0 4px;}
+#logoutBtn{padding:7px 13px;font-size:12px;}
+
+.lg-pwwrap{position:relative;}
+.lg-pwwrap input{padding-right:42px;}
+#lgEye{position:absolute;top:50%;right:6px;transform:translateY(-50%);width:32px;height:32px;border:0;border-radius:9px;background:transparent;font-size:16px;line-height:1;cursor:pointer;opacity:.55;transition:opacity .15s ease,background .15s ease;}
+#lgEye:hover{opacity:1;background:rgba(120,140,180,.14);}
+#lgEye.on{opacity:1;background:rgba(59,125,245,.16);}
+
+.lg-links{margin-top:13px;text-align:center;}
+.lg-links a{font-size:12px;font-weight:600;color:#3B7DF5;text-decoration:none;cursor:pointer;}
+.lg-links a:hover{text-decoration:underline;}
+#cpBtn,#fpNext,#fpBtn{width:100%;padding:12px;border:0;border-radius:13px;background:linear-gradient(180deg,#5b9bff,#3B7DF5);color:#fff;font:700 14px 'Inter',sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(59,125,245,.34),inset 0 1px 0 rgba(255,255,255,.5);}
+#cpBtn:hover,#fpNext:hover,#fpBtn:hover{transform:translateY(-1px);}
+.lg-divider{margin:16px 0 10px;font-size:11px;font-weight:700;color:#5B6472;letter-spacing:.4px;text-transform:uppercase;text-align:center;}
+.lg-note{padding:11px 13px;border-radius:12px;background:rgba(255,180,60,.16);border:1px solid rgba(255,160,40,.4);color:#8A5A10;font-size:12.5px;line-height:1.55;font-weight:500;}
+.lg-q{margin:0 0 10px;padding:10px 13px;border-radius:12px;background:rgba(59,125,245,.1);border:1px solid rgba(59,125,245,.28);color:#1B2330;font-size:13px;font-weight:600;}
+#fpStep2 button{margin-top:4px;}
+.um-rec{font-size:10.5px;font-weight:600;color:#5B6472;background:rgba(120,140,180,.14);border-radius:8px;padding:2px 8px;}
+.um-key{margin-top:9px;padding:9px 12px;border-radius:10px;background:rgba(46,190,120,.13);border:1px dashed rgba(46,190,120,.5);color:#177A4B;font:700 12.5px 'SF Mono',Consolas,monospace;}
+.um-note{margin:-4px 0 14px;padding:9px 12px;font-size:11.5px;color:#5B6472;background:rgba(120,140,180,.09);border:1px solid rgba(120,140,180,.22);border-radius:10px;line-height:1.5;}
+.um-pwwrap{position:relative;display:inline-flex;flex:0 1 220px;min-width:150px;}
+.um-pwwrap-add{flex:1 1 130px;}
+.um-pwwrap input{width:100%;padding-right:66px;}
+.um-pwwrap-add input{padding:8px 66px 8px 11px;font:500 12.5px 'Inter',sans-serif;border:1px solid rgba(120,140,180,.4);border-radius:10px;background:rgba(255,255,255,.85);outline:none;}
+.um-eye,.um-dice{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border:0;border-radius:7px;background:transparent;font-size:13px;line-height:1;cursor:pointer;opacity:.55;transition:opacity .15s ease,background .15s ease;padding:0;}
+.um-eye{right:34px;}
+.um-dice{right:5px;}
+.um-eye:hover,.um-dice:hover{opacity:1;background:rgba(120,140,180,.14);}
+.um-eye.on{opacity:1;background:rgba(59,125,245,.16);}
+.um-pwshow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;padding:9px 12px;border-radius:10px;background:rgba(46,190,120,.13);border:1px solid rgba(46,190,120,.5);}
+.um-pwshow-lbl{font-size:12px;font-weight:600;color:#177A4B;}
+.um-pwshow-val{font:700 13px 'SF Mono',Consolas,monospace;color:#177A4B;background:rgba(255,255,255,.7);padding:3px 9px;border-radius:7px;user-select:all;}
+.um-copy{padding:5px 11px !important;font-size:11.5px !important;}
+.um-sq{margin-top:10px;padding:11px 12px;border-radius:11px;background:rgba(120,140,180,.08);border:1px dashed rgba(120,140,180,.35);}
+.um-sq-label{font-size:12px;color:#3B4452;margin-bottom:7px;line-height:1.5;}
+.um-sq-label b{color:#1B2330;margin-right:3px;}
+.um-sq-status{color:#5B6472;}
+.um-sq-row{display:flex;gap:7px;flex-wrap:wrap;}
+.um-sq-row input{flex:1 1 140px;min-width:0;padding:7px 10px;font:500 12px 'Inter',sans-serif;border:1px solid rgba(120,140,180,.4);border-radius:9px;background:rgba(255,255,255,.85);outline:none;}
+.um-sq-clear{margin-top:8px;color:#B22A3E !important;border-color:rgba(255,90,110,.4) !important;}
+.um-sqrow{margin-top:9px;}
+.um-sqrow input{padding:8px 11px;font:500 12.5px 'Inter',sans-serif;border:1px solid rgba(120,140,180,.4);border-radius:10px;background:rgba(255,255,255,.85);outline:none;flex:1 1 200px;}
+.um-flash-ok{display:block !important;margin-top:8px;padding:9px 12px;border-radius:10px;background:rgba(46,190,120,.16) !important;border:1px solid rgba(46,190,120,.45) !important;color:#177A4B !important;font-size:12.5px;font-weight:600;}
+.um-count{margin:0 0 10px;font-size:11.5px;font-weight:700;color:#5B6472;letter-spacing:.3px;text-transform:uppercase;padding:0 2px;}
+.um-row.um-hi{animation:umhi 2.6s ease;border-color:rgba(59,125,245,.55);box-shadow:0 8px 22px rgba(59,125,245,.28);}
+@keyframes umhi{0%,15%{background:rgba(59,125,245,.22);}100%{background:rgba(255,255,255,.6);}}
+#lgOk{display:none;margin:0 0 12px;padding:9px 12px;border-radius:11px;background:rgba(46,190,120,.14);border:1px solid rgba(46,190,120,.4);color:#177A4B;font-size:12px;font-weight:600;text-align:center;}
+#usersBtn{margin-left:auto;}
+#whoami{margin-left:0;}
+#usersModal,#backupModal{display:none;position:fixed;inset:0;z-index:900;align-items:center;justify-content:center;background:rgba(26,40,72,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+.um-danger{background:linear-gradient(180deg,#f9877a,#e75c50) !important;color:#fff !important;border-color:transparent !important;box-shadow:0 3px 10px rgba(231,92,80,.28) !important;}
+.um-danger:disabled{background:rgba(200,200,200,.5) !important;color:#888 !important;box-shadow:none !important;}
+.bk-section{margin-top:14px;padding:14px 16px;background:rgba(255,255,255,.55);border:1px solid rgba(200,210,225,.6);border-radius:14px;}
+.bk-head{font-size:13.5px;color:#1B2330;margin-bottom:12px;display:flex;align-items:center;gap:9px;}
+.bk-head .bk-num{width:24px;height:24px;background:#3B7DF5;color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+.bk-head b{font-weight:700;}
+.bk-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;}
+.bk-inline{font-size:11.5px;color:#5B6472;display:inline-flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.55);border:1px solid rgba(200,210,225,.5);}
+.bk-inline input{accent-color:#3B7DF5;cursor:pointer;}
+.bk-filelabel{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px dashed #3B7DF5;border-radius:10px;background:rgba(59,125,245,.06);color:#3B7DF5;cursor:pointer;font-weight:600;font-size:12px;}
+.bk-filelabel:hover{background:rgba(59,125,245,.12);}
+.bk-filename{font-size:11.5px;color:#5B6472;}
+.bk-warn{margin-top:9px;padding:8px 11px;background:rgba(242,169,59,.12);border:1px solid rgba(242,169,59,.35);border-radius:9px;font-size:11.5px;line-height:1.45;color:#7A4E0F;}
+.bk-warn b{color:#5A3C0B;}
+.bk-summary{margin-top:10px;padding:9px 12px;background:rgba(223,243,230,.5);border:1px solid rgba(46,190,120,.4);border-radius:9px;color:#177A4B;font-size:12px;line-height:1.45;display:none;}
+.bk-summary.show{display:block;}
+.bk-summary b{color:#0F5A2D;font-weight:800;}
+.bk-summary.err{background:rgba(251,221,217,.6);border-color:rgba(178,42,62,.4);color:#B22A3E;}
+.bk-log{background:#0F1720;color:#B8CADD;border-radius:11px;padding:12px 14px;font:11.5px/1.55 'SF Mono',Consolas,monospace;max-height:220px;overflow:auto;white-space:pre-wrap;margin-top:14px;display:none;}
+.bk-log.show{display:block;}
+.bk-log .ok{color:#5EE28C;}
+.bk-log .err{color:#FF8875;}
+.bk-log .head{color:#7BB4FF;font-weight:600;}
+.um-card{width:min(94vw,680px);max-height:86vh;overflow:auto;padding:22px 24px;border-radius:20px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(26px) saturate(185%);backdrop-filter:blur(26px) saturate(185%);border:1px solid rgba(255,255,255,.8);box-shadow:0 24px 70px rgba(26,40,72,.3);}
+.um-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.um-top h2{margin:0;font-size:17px;color:#1B2330;}
+.um-btn{border:1px solid rgba(120,140,180,.4);background:rgba(255,255,255,.75);color:#1B2330;font:600 12px 'Inter',sans-serif;padding:7px 12px;border-radius:10px;cursor:pointer;}
+.um-btn:hover{background:#fff;}
+.um-btn:disabled{opacity:.4;cursor:default;}
+.um-add{background:linear-gradient(180deg,#5b9bff,#3B7DF5);color:#fff;border:0;}
+.um-del{color:#B22A3E;border-color:rgba(255,90,110,.4);}
+.um-addbox{padding:13px;border:1px dashed rgba(120,140,180,.45);border-radius:14px;margin-bottom:16px;background:rgba(255,255,255,.5);}
+.um-addrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px;}
+.um-addrow input,.um-addrow select{padding:8px 11px;font:500 12.5px 'Inter',sans-serif;border:1px solid rgba(120,140,180,.4);border-radius:10px;background:rgba(255,255,255,.85);outline:none;}
+.um-addrow input{flex:1 1 130px;min-width:0;}
+#umErr{display:none;margin-top:8px;padding:8px 11px;border-radius:10px;background:rgba(255,90,110,.14);border:1px solid rgba(255,90,110,.35);color:#B22A3E;font-size:12px;font-weight:600;}
+.um-row{padding:12px 13px;border:1px solid rgba(255,255,255,.75);border-radius:14px;background:rgba(255,255,255,.6);box-shadow:0 3px 12px rgba(26,40,72,.06);margin-bottom:10px;}
+.um-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.um-head b{font-size:13.5px;color:#1B2330;}
+.um-you{font-size:10px;font-weight:700;color:#fff;background:#3B7DF5;border-radius:8px;padding:2px 7px;}
+.um-head select{margin-left:auto;padding:6px 9px;font:600 12px 'Inter',sans-serif;border:1px solid rgba(120,140,180,.4);border-radius:9px;background:rgba(255,255,255,.85);}
+.um-tabs{display:flex;flex-wrap:wrap;gap:5px 13px;}
+.um-tab{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#3B4452;cursor:pointer;user-select:none;padding:3px 0;}
+.um-tab input{accent-color:#3B7DF5;width:14px;height:14px;cursor:pointer;}
+.um-alltabs{font-size:12px;color:#5B6472;font-style:italic;}
+.um-pw{display:flex;gap:8px;margin-top:9px;}
+.um-pwin{flex:0 1 200px;padding:7px 10px;font:500 12px 'Inter',sans-serif;border:1px solid rgba(120,140,180,.4);border-radius:9px;background:rgba(255,255,255,.85);outline:none;}
+</style>
+</head>
+<body>
+
+  <div id="loginGate">
+    <div class="lg-card">
+      <h1>🧶 Homeweavers Workspace</h1>
+      <p class="lg-sub" id="lgTitleSub">Sign in to open your dashboards</p>
+      <div id="lgErr"></div>
+      <div id="lgOk"></div>
+      <form id="lgForm">
+        <div class="lg-field"><label for="lgUser">Username</label><input id="lgUser" type="text" autocomplete="username" spellcheck="false" autocapitalize="none" autocorrect="off"></div>
+        <div class="lg-field"><label for="lgPass">Password</label><div class="lg-pwwrap"><input id="lgPass" type="password" autocomplete="current-password"><button type="button" id="lgEye" tabindex="-1" aria-label="Show password">👁</button></div></div>
+        <div class="lg-row"><input id="lgRemember" type="checkbox"><label for="lgRemember">Keep me signed in for 30 days</label></div>
+        <button id="lgBtn" type="button">Sign in</button>
+        <div class="lg-links"><a href="#" id="lgCpLink">Change password</a> · <a href="#" id="lgFpLink">Forgot password?</a></div>
+      </form>
+      <div id="cpForm" style="display:none">
+        <div class="lg-field"><label for="cpUser">Username</label><input id="cpUser" type="text" autocomplete="username" spellcheck="false" autocapitalize="none" autocorrect="off"></div>
+        <div class="lg-field"><label for="cpOld">Current password</label><input id="cpOld" type="password" autocomplete="current-password"></div>
+        <div class="lg-field"><label for="cpNew1">New password</label><input id="cpNew1" type="password" autocomplete="new-password"></div>
+        <div class="lg-field"><label for="cpNew2">Repeat new password</label><input id="cpNew2" type="password" autocomplete="new-password"></div>
+        <div class="lg-divider">Recovery setup (optional)</div>
+        <div class="lg-field"><label for="cpQ">Security question</label><input id="cpQ" type="text" placeholder="e.g. Name of my first school?"></div>
+        <div class="lg-field"><label for="cpA">Answer</label><input id="cpA" type="text" autocapitalize="none" autocomplete="off"></div>
+        <button id="cpBtn" type="button">Update password</button>
+        <div class="lg-links"><a href="#" id="cpBack">← Back to sign in</a></div>
+      </div>
+      <div id="fpForm" style="display:none">
+        <div id="fpStep1">
+          <div class="lg-field"><label for="fpUser">Username</label><input id="fpUser" type="text" autocomplete="username" spellcheck="false" autocapitalize="none" autocorrect="off"></div>
+          <button id="fpNext" type="button">Continue</button>
+        </div>
+        <div id="fpNone" class="lg-note" style="display:none">No recovery options are set up for this user. Ask an admin to reset your password from the 👥 Users panel.</div>
+        <div id="fpStep2" style="display:none">
+          <div id="fpQWrap" style="display:none">
+            <div class="lg-q" id="fpQText"></div>
+            <div class="lg-field"><label for="fpAns">Your answer</label><input id="fpAns" type="text" autocapitalize="none" autocomplete="off"></div>
+          </div>
+          <div id="fpKWrap" class="lg-field" style="display:none"><label for="fpKey">Recovery key</label><input id="fpKey" type="text" placeholder="XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false"></div>
+          <div class="lg-field"><label for="fpNew1">New password</label><input id="fpNew1" type="password" autocomplete="new-password"></div>
+          <div class="lg-field"><label for="fpNew2">Repeat new password</label><input id="fpNew2" type="password" autocomplete="new-password"></div>
+          <button id="fpBtn" type="button">Reset password</button>
+        </div>
+        <div class="lg-links"><a href="#" id="fpBack">← Back to sign in</a></div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="usersModal">
+    <div class="um-card">
+      <div class="um-top"><h2>👥 Users &amp; Access</h2><button id="umClose" class="um-btn">✕ Close</button></div>
+      <div class="um-note">Passwords are one-way encrypted (SHA-256) — nobody can view existing passwords, only set new ones. Use 👁 to see what you’re typing, or 🎲 to generate a strong one.</div>
+      <div class="um-addbox">
+        <div class="um-addrow">
+          <input id="umNewUser" type="text" placeholder="username" spellcheck="false" autocapitalize="none">
+          <input id="umNewPass" type="password" placeholder="password">
+          <select id="umNewRole"><option value="user">User</option><option value="admin">Admin</option></select>
+          <button id="umAdd" class="um-btn um-add">+ Add user</button>
+        </div>
+        <div id="umNewTabs" class="um-tabs"></div>
+        <div class="um-addrow um-sqrow">
+          <input id="umNewSqQ" type="text" placeholder="security question (optional)">
+          <input id="umNewSqA" type="text" placeholder="answer" autocomplete="off" autocapitalize="none">
+        </div>
+        <div id="umErr"></div>
+      </div>
+      <div id="umList"></div>
+    </div>
+  </div>
+
+  <div id="backupModal">
+    <div class="um-card">
+      <div class="um-top"><h2>💾 Backup &amp; Restore</h2><button id="bkClose" class="um-btn">✕ Close</button></div>
+      <div class="um-note">Downloads or restores <b>every workspace database in this browser</b> — users, containers, products, inventory, orders, financial, attendance. Great for moving to another browser, sharing with a teammate, or keeping periodic snapshots. Nothing leaves your computer unless you send the file yourself.</div>
+
+      <div class="bk-section">
+        <div class="bk-head"><span class="bk-num">1</span><b>Export</b> — download a JSON backup of everything in this browser</div>
+        <div class="bk-actions">
+          <button id="bkExport" class="um-btn um-add">📤 Export all data</button>
+          <label class="bk-inline"><input type="checkbox" id="bkAutoWeek"> weekly auto-backup reminder</label>
+        </div>
+        <div id="bkExportSummary" class="bk-summary"></div>
+      </div>
+
+      <div class="bk-section">
+        <div class="bk-head"><span class="bk-num">2</span><b>Restore</b> — replace this browser's data with a backup file</div>
+        <div class="bk-actions">
+          <label class="bk-filelabel" for="bkFile">📁 Choose backup JSON…</label>
+          <input type="file" id="bkFile" accept=".json,application/json" style="display:none">
+          <span id="bkFileName" class="bk-filename"></span>
+          <button id="bkImport" class="um-btn um-danger" disabled>⬇️ Restore (overwrites)</button>
+        </div>
+        <div class="bk-warn"><b>⚠︎ Restore replaces current data.</b> Take an export first if you want a rollback point. After restore, sign in again on the workspace.</div>
+        <div id="bkImportSummary" class="bk-summary"></div>
+      </div>
+
+      <div id="bkLog" class="bk-log"></div>
+    </div>
+  </div>
+
+  <div id="topbar">
+    <span class="brand">🧶 Homeweavers Workspace</span>
+      <button class="navbtn" data-id="inventory">📦 Live Inventory</button>
+      <button class="navbtn" data-id="products">🏷️ Products</button>
+      <button class="navbtn" data-id="orders">🛒 Orders</button>
+      <button class="navbtn" data-id="financial">📊 Financial</button>
+      <button class="navbtn" data-id="attendance">🗓️ Attendance</button>
+      <button class="navbtn" data-id="datamgr">🗄️ Data Manager</button>
+      <button class="navbtn" data-id="containers">🚢 Containers <span id="containersBadge" style="display:none;margin-left:4px;padding:1px 7px;font-size:10px;font-weight:800;border-radius:8px;background:#F26B5E;color:#fff;">0</span></button>
+      <button class="navbtn" id="usersBtn" style="display:none">👥 Users</button>
+      <button class="navbtn" id="backupBtn" style="display:none" title="Export or restore all workspace data">💾 Backup</button>
+      <span id="whoami"></span>
+      <button class="navbtn" id="logoutBtn" style="display:none">🚪 Logout</button>
+  </div>
+  <div id="frames">
+    <div id="splash"><div class="spin"></div><span id="splashText">Loading…</span></div>
+  </div>
+<script type="text/plain" id="src-inventory">
+{{SRC_INVENTORY}}
+</script>
+<script type="text/plain" id="src-products">
+{{SRC_PRODUCTS}}
+</script>
+<script type="text/plain" id="src-orders">
+{{SRC_ORDERS}}
+</script>
+<script type="text/plain" id="src-financial">
+{{SRC_FINANCIAL}}
+</script>
+<script type="text/plain" id="src-attendance">
+{{SRC_ATTENDANCE}}
+</script>
+<script type="text/plain" id="src-containers">
+{{SRC_CONTAINERS}}
+</script>
+<script id="hw-config">
+{{CONFIG}}
+</script>
+<script type="text/plain" id="child-shim">
+{{CHILD_SHIM}}
+</script>
+<script>
+(function(){
+  var CHILD_SHIM = document.getElementById('child-shim').textContent;
+  var NAMES = {"inventory": "Live Inventory", "products": "Products", "orders": "Orders", "financial": "Financial", "attendance": "Attendance", "datamgr": "Data Manager", "containers": "Containers"};
+  var SEP = '\u0000';
+
+  /* ---------------- parent persistent storage for the tabs ---------------- */
+  function bridgeDB(){
+    return new Promise(function(res, rej){
+      var settled = false, o;
+      try { o = indexedDB.open('hw_bridge', 1); } catch(e){ return rej(e); }
+      o.onupgradeneeded = function(){ try{ o.result.createObjectStore('kv'); }catch(e){} };
+      o.onsuccess = function(){ settled = true; res(o.result); };
+      o.onerror = function(){ settled = true; rej(o.error); };
+      o.onblocked = function(){ settled = true; rej(new Error('blocked')); };
+      setTimeout(function(){ if(!settled) rej(new Error('idb-timeout')); }, 1500);
+    });
+  }
+  function ck(db, store, key){ return db + SEP + store + SEP + key; }
+  function txWrite(fn){ return bridgeDB().then(function(d){ return new Promise(function(res, rej){ var tx = d.transaction('kv','readwrite'); fn(tx.objectStore('kv')); tx.oncomplete = function(){ res(); }; tx.onerror = function(){ rej(tx.error); }; }); }); }
+  function bridgePut(db, store, key, value){ return txWrite(function(st){ try{ st.put(value, ck(db,store,key)); }catch(e){} }); }
+  function bridgeDel(db, store, key){ return txWrite(function(st){ st['delete'](ck(db,store,key)); }); }
+  function rangeDelete(prefix){
+    return bridgeDB().then(function(d){ return new Promise(function(res, rej){
+      var tx = d.transaction('kv','readwrite'), st = tx.objectStore('kv');
+      var range = IDBKeyRange.bound(prefix, prefix + '\uffff');
+      var c = st.openCursor(range);
+      c.onsuccess = function(e){ var cur = e.target.result; if(cur){ cur['delete'](); cur['continue'](); } };
+      tx.oncomplete = function(){ res(); }; tx.onerror = function(){ rej(tx.error); };
+    }); });
+  }
+  function bridgeClr(db, store){ return rangeDelete(db + SEP + store + SEP); }
+  function bridgeClrDb(db){ return rangeDelete(db + SEP); }
+  function bridgeReadDb(db){
+    return bridgeDB().then(function(d){ return new Promise(function(res, rej){
+      var out = {}, tx = d.transaction('kv','readonly'), st = tx.objectStore('kv');
+      var range = IDBKeyRange.bound(db + SEP, db + SEP + '\uffff');
+      var c = st.openCursor(range);
+      c.onsuccess = function(e){ var cur = e.target.result;
+        if(cur){ var parts = String(cur.key).split(SEP); var store = parts[1]; var key = parts.slice(2).join(SEP); (out[store] = out[store] || {})[key] = cur.value; cur['continue'](); }
+        else res(out);
+      };
+      c.onerror = function(){ rej(c.error); };
+    }); });
+  }
+
+  /* ---------------- live cross-tab sync ---------------- */
+  function broadcast(except, msg){
+    var ifr = document.querySelectorAll('#frames iframe');
+    for(var i=0;i<ifr.length;i++){ var w = ifr[i].contentWindow; if(w && w !== except){ try{ w.postMessage(msg, '*'); }catch(e){} } }
+  }
+
+  /* ---------------- serve requests from the tabs ---------------- */
+  window.addEventListener('message', function(e){
+    var m = e.data; if(!m || !m.__hwb) return;
+    var reply = function(extra){ if(m.rid && e.source){ try{ e.source.postMessage(Object.assign({__hwb:1, rid:m.rid}, extra||{}), '*'); }catch(_){} } };
+    switch(m.op){
+      case 'ls-set': try{ localStorage.setItem(m.key, m.value); }catch(_){} broadcast(e.source, {__hwb:1, op:'ls-ext', key:m.key, value:m.value}); break;
+      case 'ls-remove': try{ localStorage.removeItem(m.key); }catch(_){} broadcast(e.source, {__hwb:1, op:'ls-ext', key:m.key, del:1}); break;
+      case 'ls-clear': try{ localStorage.clear(); }catch(_){} break;
+      case 'idb-open': bridgeReadDb(m.db).then(function(data){ reply({data:data}); }).catch(function(){ reply({data:{}}); }); break;
+      case 'idb-put': bridgePut(m.db, m.store, m.key, m.value).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, key:m.key, value:m.value}); break;
+      case 'idb-del': bridgeDel(m.db, m.store, m.key).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, key:m.key, del:1}); break;
+      case 'idb-clr': bridgeClr(m.db, m.store).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, clr:1}); break;
+      case 'idb-deldb': bridgeClrDb(m.db).catch(function(){}); break;
+      case 'goto':
+        // a dashboard asking the workspace to switch to another tab
+        try{ show(m.id); }catch(_){}
+        break;
+      case 'download':
+        // Saving on behalf of an embedded tab (see the shim's download bridge).
+        try{
+          var dUrl = URL.createObjectURL(m.blob);
+          var dA = document.createElement('a');
+          dA.href = dUrl; dA.download = m.name || 'download';
+          document.body.appendChild(dA); dA.click();
+          setTimeout(function(){ try{ document.body.removeChild(dA); }catch(_){} URL.revokeObjectURL(dUrl); }, 1500);
+        }catch(_){}
+        break;
+    }
+  });
+
+  /* ---------------- build & show tabs ---------------- */
+  function dumpLS(){ var o = {}; try{ for(var i=0;i<localStorage.length;i++){ var k = localStorage.key(i); o[k] = localStorage.getItem(k); } }catch(e){} return o; }
+  function b64ToStr(b64){ var bin = atob(b64), len = bin.length, bytes = new Uint8Array(len); for(var i=0;i<len;i++) bytes[i] = bin.charCodeAt(i); return new TextDecoder('utf-8').decode(bytes); }
+  // Some nav entries are different VIEWS of the same embedded document, so the
+  // file is stored once and simply read twice.
+  var SRC_OF = { datamgr:'inventory' };
+  function rawHtml(id){ return b64ToStr(document.getElementById('src-'+(SRC_OF[id]||id)).textContent.trim()); }
+  function childHtml(id){
+    var doc = rawHtml(id);
+    var seed;
+    try { seed = JSON.stringify(dumpLS()).replace(/</g, '\\u003c'); } catch(e){ seed = '{}'; }
+    var cfg;
+    try { cfg = JSON.stringify(window.HW_CONFIG || {}).replace(/</g, '\\u003c'); } catch(e){ cfg = '{}'; }
+    var inject = '<script>window.__HW_SEED_LS=' + seed + ';window.__HW_VIEW=' + JSON.stringify(id) + ';window.HW_CONFIG=' + cfg + ';<\/script>'
+               + '<script>' + CHILD_SHIM + '<\/script>'
+               + '<style>#backToConsole,#backConsole,#__hwBackBtn,[id*="ackConsole"]{display:none!important}body.hw-embedded .toolbar,body.hw-hasback .toolbar{padding-left:14px!important}<\/style>';
+    if(/<head[^>]*>/.test(doc)) return doc.replace(/<head[^>]*>/, function(mt){ return mt + inject; });
+    return inject + doc;
+  }
+
+  var loaded = {}, urls = {};
+  var frames = document.getElementById('frames'), splash = document.getElementById('splash'), splashText = document.getElementById('splashText');
+  function activate(id){
+    Array.prototype.forEach.call(document.querySelectorAll('.navbtn'), function(b){ b.classList.toggle('active', b.getAttribute('data-id') === id); });
+    Array.prototype.forEach.call(frames.querySelectorAll('iframe'), function(f){
+      var on = f.getAttribute('data-id') === id;
+      f.classList.toggle('active', on);
+      // Let a tab know it is now on screen so it can pick up anything another
+      // dashboard changed while it was hidden.
+      if(on){ try{ f.contentWindow.postMessage({__hwb:1, op:'shown', id:id}, '*'); }catch(e){} }
+    });
+  }
+  function show(id){
+    if(!loaded[id]){
+      loaded[id] = true; splash.style.display = 'flex'; splashText.textContent = 'Loading ' + (NAMES[id] || id) + '\u2026';
+      setTimeout(function(){
+        var fr = document.createElement('iframe');
+        fr.setAttribute('data-id', id); fr.setAttribute('title', NAMES[id] || id); fr.setAttribute('allow', 'clipboard-write; clipboard-read');
+        fr.addEventListener('load', function(){ splash.style.display = 'none'; });
+        var html;
+        try { html = childHtml(id); }                       // with storage bridge
+        catch(e){ try { html = rawHtml(id); } catch(_){ html = '<p style="font-family:sans-serif;padding:20px">Could not load this dashboard.</p>'; } }
+        try { fr.srcdoc = html; }                            // srcdoc renders reliably from a local file
+        catch(e2){ try { var blob = new Blob([html], {type:'text/html'}); fr.src = URL.createObjectURL(blob); } catch(_){} }
+        frames.appendChild(fr);
+        setTimeout(function(){ splash.style.display = 'none'; }, 6000);
+        activate(id);
+      }, 30);
+    } else { activate(id); }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.navbtn'), function(b){ b.addEventListener('click', function(){ show(b.getAttribute('data-id')); }); });
+  window.addEventListener('message', function(e){
+    if(e && e.data === 'hw-back-to-console'){ /* no-op */ }
+    if(e && e.data && e.data.type === 'hw-alert' && e.data.tab === 'containers'){
+      var b = document.getElementById('containersBadge');
+      if(b){ if(e.data.count > 0){ b.textContent = e.data.count; b.style.display = ''; } else { b.style.display = 'none'; } }
+    }
+  });
+  /* ---------------- login gate ---------------- */
+{{LOGIN_GATE}}
+  initLoginGate(function(first){ show(first); });
+})();
+
+</script>
+</body>
+</html>
