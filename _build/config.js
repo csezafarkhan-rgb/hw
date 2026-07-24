@@ -26,8 +26,8 @@
 
 window.HW_CONFIG = {
   /* --- Supabase (leave blank to disable cloud sync) --- */
-  SUPABASE_URL: '',              // e.g. 'https://abcxyz.supabase.co'
-  SUPABASE_ANON_KEY: '',         // e.g. 'eyJhbGciOi...'
+  SUPABASE_URL: 'https://ciyotgaoycsmyqnkegnp.supabase.co',              // e.g. 'https://abcxyz.supabase.co'
+  SUPABASE_ANON_KEY: 'sb_publishable_SlyfsK3rMr1xpiXobyRBqA_t0FvxnMJ',         // e.g. 'eyJhbGciOi...'
 
   /* --- Which tabs use Supabase when configured --- */
   CLOUD_TABS: {
