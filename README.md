@@ -1,192 +1,242 @@
 # Homeweavers Workspace
 
-A single-file HTML workspace for Home Weavers Inc., served over Node.js.
+Operations workspace: attendance and payroll, live inventory, e-commerce
+orders, container tracking, product catalogue and financial reporting, behind
+one login.
 
-Contains 7 dashboards behind a login gate:
-
-1. 📦 **Live Inventory** — daily stock snapshots and reorder triggers
-2. 🏷️ **Products** — Catalog, Photography, Pricing tabs
-3. 🛒 **Orders**
-4. 📊 **Financial** — performance dashboard
-5. 🗓️ **Attendance**
-6. 🗄️ **Data Manager** — collection rename / merge (shares the Inventory source)
-7. 🚢 **Containers** — shipment tracker with ETA alerts and auto-estimation
+**Live:** https://hw-lime-one.vercel.app · pushes to `main` redeploy on Vercel
 
 ---
 
-## Quick start
+## ⚠ Repository needs tidying
+
+Two things in this repo will cost someone an afternoon if left as they are.
+
+### Duplicate dashboard files
+
+The build produces **`Homeweavers_Workspace.html`** — one file containing every
+dashboard. These also sit in the root:
+
+```
+Financial_Performance_Dashboard.html
+Homeweavers_Containers.html
+Homeweavers_Orders.html
+Homeweavers_Products.html
+Inventory_Live_Dashboard.html
+attendance-dashboard.html
+```
+
+If they are older standalone copies, editing one changes nothing on the live
+site and the fault is invisible — the file looks right, the site does not
+change. **Decide which is authoritative**, then either delete the rest or move
+them to `legacy/` with a note saying they are not built or served.
+
+### Two schemas
+
+`supabase_schema.sql` is the one that has been run. `schema.proposed.sql` is a
+design written later, from the app's storage layout, **before this repo was
+seen**. It has not been reconciled with the live one.
+
+**Do not run `schema.proposed.sql` against a database that already has tables.**
+Treat it as a proposal to compare against, nothing more.
+
+### Not yet documented here
+
+`config.js`, `server.js`, `package.json` and `SUPABASE_SETUP.md` exist and are
+not described below, because they have not been reviewed. The presence of
+`server.js` means this is **not** a purely static site, so anything below that
+assumes "no backend" needs checking against it.
+
+---
+
+## How the workspace is built
+
+Source is split so one dashboard can change without touching the others:
+
+```
+shell.template.html        frame: login, navigation, storage bridge, backup
+dashboards/
+  attendance.html          attendance, leave, payroll
+  inventory.html           live inventory + Data Manager
+  orders.html              e-commerce orders
+  containers.html          container tracking
+  products.html            catalogue, photography, pricing
+  financial.html           sales reporting
+mobile_block.py            responsive layer, injected into every dashboard
+build.py                   assembles the single file
+```
+
+Build:
 
 ```bash
-# 1. Install dependencies (~2 MB, one time)
-npm install
-
-# 2. Build the workspace HTML from sources
-npm run build
-
-# 3. Run the server
-npm start
+python3 build.py          # → Homeweavers_Workspace.html
 ```
 
-Then open **<http://localhost:3000>** in Chrome or Edge.
+Each dashboard is base64-encoded into the shell and runs in its own frame.
+The responsive layer is injected at build time, so it exists once rather than
+six times.
 
-**Default login:** `admin` / `homeweavers123` — change it in the 👥 Users modal
-after signing in.
-
-### Alternative: no server
-
-You can skip `npm start` entirely. `Homeweavers_Workspace.html` is a
-self-contained single file — double-click it to open in your browser. All
-tabs, storage, and the login gate work offline.
-
----
-
-## Requirements
-
-- **Node.js 18 or newer** — <https://nodejs.org>
-- **Chrome, Edge, or Safari** — the workspace uses IndexedDB, sandboxed
-  iframes, and modern JS (drag/drop, async, ES modules).
-
-Confirm Node.js is installed:
-```bash
-node --version    # should print v18.x or newer
-```
-
----
-
-## Project layout
-
-```
-homeweavers-workspace/
-├── README.md
-├── package.json
-├── server.js                              Express server (npm start)
-│
-├── _build/                                Build pipeline + shared assets
-│   ├── build.js                           Build script (npm run build)
-│   ├── parent_template.html               Shell that wraps the 7 tabs
-│   ├── glass.css                          Shared theme (re-injected on build)
-│   ├── selx.js                            Multi-select dropdown upgrader
-│   ├── imgseed.js                         Product image URLs (Products only)
-│   ├── att_compact.css                    Attendance-specific styling
-│   ├── child_shim.js                      Storage bridge for iframes
-│   └── login_gate.js                      Auth + user management
-│
-├── Inventory_Live_Dashboard.html          Source dashboards
-├── Homeweavers_Products.html
-├── Homeweavers_Orders.html
-├── Financial_Performance_Dashboard.html
-├── attendance-dashboard.html
-├── Homeweavers_Containers.html
-│
-├── Homeweavers_Workspace.html             Built output (generated by build.js)
-│
-└── sample-data/
-    └── Container_Details_2026-23_07_2026.xlsx    Sample XLSX for the Containers tab
-```
-
----
-
-## Rebuilding after edits
-
-Any change to a source dashboard or a shared asset in `_build/` needs a rebuild:
+**After any change, check every dashboard still parses:**
 
 ```bash
-npm run build
+node -e "
+const fs=require('fs');
+const all=fs.readFileSync('Homeweavers_Workspace.html','utf8');
+['inventory','products','orders','financial','attendance','containers'].forEach(n=>{
+  const h=Buffer.from(new RegExp('id=\"src-'+n+'\">\\\\n([\\\\s\\\\S]*?)\\\\n</script>').exec(all)[1],'base64').toString('utf8');
+  let e=0;[...h.matchAll(/<script(?![^>]*type=\"(text\/plain|application\/json)\")[^>]*>([\s\S]*?)<\/script>/g)]
+    .forEach(x=>{try{new Function(x[2]);}catch(err){e++;}});
+  console.log(n, e ? 'SYNTAX ERROR' : 'clean');
+});
+"
 ```
 
-The build:
+Passing this is necessary, not sufficient — a valid file can still throw on
+load and leave a blank page. Open each dashboard you touched.
 
-1. Re-injects `glass.css` into every dashboard's `<style id="__hwGlass">`
-2. Re-injects `selx.js` into every dashboard's `__selxInit` script
-3. Injects `imgseed.js` into Products' `<script id="__hwImgSeed">`
-4. Injects `att_compact.css` into Attendance's `<style id="__hwAttCompact">`
-5. Base64-encodes each dashboard
-6. Substitutes `{{SRC_*}}`, `{{CHILD_SHIM}}`, `{{LOGIN_GATE}}` in the parent
-   template
-7. Writes `Homeweavers_Workspace.html`
+---
 
-Validate JS files before building to catch syntax errors early:
+## Deploying
 
 ```bash
-npm run check
+git add Homeweavers_Workspace.html
+git commit -m "what changed"
+git push
+```
+
+**Hard-refresh afterwards** (`Ctrl/Cmd + Shift + R`). The file is large and
+aggressively cached; without it you are looking at the previous build.
+
+Deploying does not touch anyone's data.
+
+---
+
+## The dashboards
+
+### Attendance
+Seven tabs: Attendance Record, Dashboard, Leave Record, Requests, Payroll,
+Changes, Official Leaves.
+
+- Imports the biometric punch file; marks lateness, early departures, mispunches
+- Per-person shifts, Saturday arrangements, per-date overrides
+- Part-day leave: **HD** half · **TD** three-quarter · **SD** short
+- Excused lateness and early departures — recorded, not counted against the person
+- Leave accrues from each employee's **joining date**, pro-rated by days
+- Payroll: per-day rate over calendar days, unpaid leave, overtime for work on
+  days off, optional PF/ESI, printable salary slips
+- **Changes** logs every mark with who made it and what it replaced, and undoes any
+- Employees see their own calendar, balance, weekly hours and the holiday list
+
+### Live Inventory + Data Manager
+Stock levels, availability, product mapping. Volume and area come from the
+Specs sheet in Products.
+
+### Ecom Orders
+Order and shipment files, backorders, editable tracking URLs.
+
+### Containers
+Arrival tracking with a packing-slip check. The tab badge reads `2/3-10` —
+slips ready, of containers arriving, within the alert window. Deleting a slip
+needs a PIN.
+
+### Products
+Catalogue, photography, pricing, and the Specs sheet feeding Inventory.
+
+### Financial
+Sales and order reporting. Has **Export data** and **Import data**; its figures
+are still embedded in the build (9.6 MB) pending the database move.
+
+---
+
+## Accounts and access
+
+One login for the project — Attendance no longer asks separately.
+
+Per account an admin sets which dashboards may be opened, what is visible
+inside Attendance (full access or own record only), and the person's name in
+the attendance data.
+
+Default admin is `admin` / `homeweavers123`. **Change it.**
+
+> Whether this login or Supabase Auth is authoritative depends on what
+> `config.js` and `server.js` do — see the tidying note above.
+
+---
+
+## Backups
+
+**Project backup** — 💾 in the navigation, admins only. One file with every
+dashboard's data, the accounts and the workspace settings. The panel states
+what it holds before download; the restore reads the data back to verify it
+landed. **Clear all data** lives here too and refuses to run until a backup has
+been downloaded in the same session.
+
+**Attendance** — Export all data (JSON), Export to Excel (16 sheets), and an
+automatic daily snapshot on the first HD screenshot or Excel export each day.
+Restore accepts JSON, `.xlsx` or `.csv`, identified by file contents rather
+than extension.
+
+**Keep backup files out of the repository** — staff names, salaries and
+passwords in plain text. Add to `.gitignore`:
+
+```
+*_Backup_*.json
+*.xlsx
 ```
 
 ---
 
-## Data storage
+## Where data lives
 
-Everything lives in **the browser's IndexedDB** — the server itself is
-stateless.
+In the browser: eight IndexedDB databases plus a set of localStorage keys.
 
-| Store | Purpose |
-|-|-|
-| `hw_workspace` / `kv` / `users` | User accounts, roles, per-tab access |
-| `hw_products` / `kv` / (multi) | Products: pricing, listing, colormap, sizemap, photo indexes |
-| `hw_inventory` / (multi) | Live inventory snapshots and settings |
-| `hw_containers` / `kv` / `list` | Container tracker records |
-| `hw_containers` / `kv` / `settings` | Alert threshold + column order |
-| `sessionStorage.hw_auth_v1` | Current login session |
-| `localStorage.hw_auth_v1` | 30-day "remember me" token (optional) |
+| Database | Holds |
+|---|---|
+| `hw_bridge` | attendance (28 keys), shared settings |
+| `hw_workspace` | user accounts |
+| `hw_inventory` | inventory and Data Manager |
+| `hw_products` | catalogue, specs, pricing |
+| `hw_orders` | orders and shipments |
+| `hw_containers` | containers and packing slips |
+| `hw_financial` | sales data |
+| `att_data`, `att_fs` | attendance records and uploaded files |
 
-**Backing up your data:** open DevTools (F12) → Application → IndexedDB → right-click
-each database → Export.
+**This is why a second browser shows an empty workspace.** Hosting does not
+change it; a database does.
 
-**Sharing data between users:** since each browser has its own IndexedDB, one
-user's data is not visible to another. This is by design (privacy). If you need
-shared data, run the server on a shared host and each user connects with their
-own login — but the storage is still per-browser.
+Containers already syncs through Supabase — that is the pattern the rest should
+follow.
 
 ---
 
-## The Container Tracker Excel format
+## Known limits
 
-The 🚢 Containers tab imports two-sheet XLSX files:
-
-- **Container Details** — active in-transit shipments
-- **Received** — history (auto-marked as delivered on import)
-
-Header row must include `CONTAINER #` and `ETA`. Column aliases the tracker
-recognises:
-
-- **Vendor** ← `Vendor`, `Supplier`
-- **Container #** ← `CONTAINER #`, `Container`, `CONTRNO`
-- **Ex-Factory** ← `EX. FACT`, `REACHED FACT`
-- **ETA** ← `ETA`, `Vessel ETA`
-- ...and 12 more (see `_build/../Homeweavers_Containers.html` `COL_MAP`).
-
-Date formats accepted:
-
-| Format | Example | Interpretation |
-|-|-|-|
-| Dots | `19.06.2026` | DD.MM.YYYY (Indian day-first) |
-| Slashes | `06/19/2026` | MM/DD/YYYY (US month-first) |
-| Non-ISO dashes | `06-19-2026` | MM-DD-YYYY (US month-first) |
-| ISO | `2026-06-19` | Year-first (unambiguous) |
-| Excel date cells | (native) | Preserved as YYYY-MM-DD |
-
-If a container has an Ex-Factory date but blank ETD/ETA, the tracker projects
-those dates using the **median offset from historical shipments on the same
-shipping line**, falling back to the overall median if that carrier has too few
-samples. Estimated dates render italicised with a `~` prefix and a tooltip
-showing the source.
-
-`sample-data/Container_Details_2026-23_07_2026.xlsx` is a real example.
+- **Data does not travel between browsers or devices.** Backup and restore is the only bridge.
+- **Financial ships 9.6 MB inside the build.**
+- **Concurrent edits**: last write wins, silently.
+- **Passwords are SHA-256, unsalted.** Enough to keep colleagues out of each
+  other's views; not real security. Do not reuse an important password.
+- **The workspace runs offline** — a genuine strength worth keeping when the
+  database arrives. Keep a local cache.
 
 ---
 
-## Server endpoints
+## What is next
 
-| Path | What it does |
-|-|-|
-| `GET /` | Serves `Homeweavers_Workspace.html` |
-| `GET /health` | JSON with workspace size + last build time |
-| `GET /source/<file>` | Direct access to a source dashboard (for debugging) |
-| `GET /sample-data/<file>` | Sample XLSX and other reference files |
+Move storage to Supabase so an admin's change reaches every login.
 
-Ports: default 3000, override with `PORT=8080 npm start`.
+**First:** reconcile `supabase_schema.sql` with `schema.proposed.sql`, and
+establish what `server.js` and `config.js` already do. Everything else depends
+on that answer.
 
----
+Then, each stage leaving the workspace usable:
 
-## License
+1. **Accounts** → one sign-in everywhere
+2. **Storage layer** → read/write against the database, with a local cache
+3. **Attendance** → most edited, most people
+4. **Containers** → already speaks Supabase; mostly re-pointing it
+5. **Orders**, then **Inventory + Products**
+6. **Financial** → last; strip the embedded data once import is proven
 
-Proprietary. Home Weavers Inc.
+**Before starting: take a project backup and keep it somewhere safe.** It is
+the only copy of the data, and step 3 is where it gets loaded into the database.
