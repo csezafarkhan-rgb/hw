@@ -1,6 +1,23 @@
 import base64, io, os, re
 from mobile_block import MOBILE
 
+
+# Generate the browser-safe Supabase configuration from Vercel environment variables.
+# The Publishable/anon key is intended for frontend use; never use a service-role key here.
+supabase_url = os.environ.get("SUPABASE_URL", "").strip()
+supabase_key = os.environ.get("SUPABASE_ANON_KEY", "").strip()
+if not supabase_url or not supabase_key:
+    raise SystemExit("Missing SUPABASE_URL or SUPABASE_ANON_KEY in the Vercel environment.")
+
+config_js = """window.HW_SUPABASE_CONFIG = {
+  url: %r,
+  anonKey: %r,
+  workspaceId: '00000000-0000-0000-0000-000000000001'
+};
+""" % (supabase_url, supabase_key)
+
+io.open("supabase-config.js", "w", encoding="utf-8").write(config_js)
+
 SRC = 'shell.template.html'
 shell = io.open(SRC, encoding='utf-8').read()
 
