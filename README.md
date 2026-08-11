@@ -53,7 +53,7 @@ build.py                   assembles the single file
 Build:
 
 ```bash
-python3 build.py          # → Homeweavers_Workspace.html
+python3 build.py          # → index.html
 ```
 
 Each dashboard is base64-encoded into the shell and runs in its own frame.
@@ -65,7 +65,7 @@ six times.
 ```bash
 node -e "
 const fs=require('fs');
-const all=fs.readFileSync('Homeweavers_Workspace.html','utf8');
+const all=fs.readFileSync('index.html','utf8');
 ['inventory','products','orders','financial','attendance','containers'].forEach(n=>{
   const h=Buffer.from(new RegExp('id=\"src-'+n+'\">\\\\n([\\\\s\\\\S]*?)\\\\n</script>').exec(all)[1],'base64').toString('utf8');
   let e=0;[...h.matchAll(/<script(?![^>]*type=\"(text\/plain|application\/json)\")[^>]*>([\s\S]*?)<\/script>/g)]
@@ -83,7 +83,7 @@ load and leave a blank page. Open each dashboard you touched.
 ## Deploying
 
 ```bash
-git add Homeweavers_Workspace.html
+git add index.html
 git commit -m "what changed"
 git push
 ```

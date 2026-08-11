@@ -21,5 +21,5 @@ for name in ['inventory','products','orders','financial','attendance','container
     assert m, 'no slot for ' + name
     shell = shell[:m.start(2)] + enc + shell[m.end(2):]
 
-io.open('Homeweavers_Workspace.html','w',encoding='utf-8').write(shell)
+io.open('index.html','w',encoding='utf-8').write(shell)
 print('built %d bytes' % len(shell))

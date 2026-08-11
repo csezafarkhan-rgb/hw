@@ -69,7 +69,7 @@ git push -u origin main
 Suggested layout — keeping the build split you already have:
 
 ```
-├── Homeweavers_Workspace.html   ← the built file Vercel serves
+├── index.html   ← the built file Vercel serves
 ├── build.py                     ← assembles it
 ├── shell.template.html
 ├── dashboards/
@@ -111,7 +111,7 @@ Add `vercel.json` so the root serves the workspace:
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/Homeweavers_Workspace.html" }
+    { "source": "/", "destination": "/index.html" }
   ],
   "headers": [
     {
