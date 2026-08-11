@@ -1,0 +1,2283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeweavers · Containers</title>
+<style id="__wsHide">body.hw-embedded .toolbar .back-console{display:none !important;}</style>
+<style id="__hwGlass">
+/* ============ HOMEWEAVERS · LIQUID GLASS · unified theme ============ */
+
+/* ---- Unified typography (iPhone / SF feel, Inter fallback) ---- */
+*{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Segoe UI',system-ui,sans-serif !important;}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;letter-spacing:.1px;}
+.num,td,th,.v,.k,.mono,[class*="kpi"] .v{font-variant-numeric:tabular-nums !important;font-feature-settings:'tnum' 1 !important;}
+
+/* ---- Uniform text scale across every tab ---- */
+html{font-size:16px !important;}
+body{font-size:14px !important; line-height:1.45 !important;}
+.btn,.ghost,.btn-sm,.btn-ghost,.tbtn,.month-btn,.page-tab,.tab,.export-csv-btn,.ms-btn,.ms-mini,
+input,select,textarea,.search,.sel,.gate-field input{font-size:13px !important;}
+table,.data-table,td,th{font-size:12.5px !important;}
+.eyebrow,.small-note,.sub,.card-sub,.muted,.k,.badge,.chip,.pill,.tag{font-size:11.5px !important;}
+
+/* ---- One family palette (remaps every dashboard's vars) ---- */
+:root{
+  --bg:#EAEEF9 !important;
+  --panel:#FFFFFF !important; --panel2:#F3F6FC !important; --panel-2:#F3F6FC !important; --panel-3:#EDF1FA !important;
+  --line:#E6EBF4 !important; --line2:#D6DEEC !important; --line-dk:#D6DEEC !important;
+  --ink:#141A24 !important; --mut:#5A6675 !important; --mut2:#8A94A6 !important;
+  --ink-soft:#5A6675 !important; --ink-dim:#8A94A6 !important;
+  --brand:#3B7DF5 !important; --good:#0E9F6E !important; --green:#0E9F6E !important;
+  --bad:#E5484D !important; --alert:#E5484D !important; --watch:#D97706 !important; --bar:#D97706 !important;
+  --alias:#8B5CF6 !important; --lock:#8B5CF6 !important;
+  --radius:20px !important;
+  /* Financial family remap */
+  --paper:#EAEEF9 !important; --white:#FFFFFF !important;
+  --slate-100:#F3F6FC !important; --slate-200:#E6EBF4 !important; --slate-400:#8A94A6 !important; --slate-500:#5A6675 !important;
+  --gold:#3B7DF5 !important; --gold-dark:#2C6BE0 !important; --gold-tint:rgba(59,125,245,.12) !important;
+  --red:#E5484D !important; --red-tint:rgba(229,72,77,.12) !important;
+  --green-tint:rgba(14,159,110,.12) !important; --teal:#0E9F6E !important; --teal-tint:rgba(14,159,110,.12) !important;
+}
+
+/* ---- Wallpaper: the color the glass refracts ---- */
+html{
+  background:
+    radial-gradient(1100px 760px at 8% -10%, #d8e4ff 0%, rgba(216,228,255,0) 60%),
+    radial-gradient(980px 720px at 108% 4%, #ffe0f0 0%, rgba(255,224,240,0) 55%),
+    radial-gradient(900px 900px at 50% 118%, #d5f6ff 0%, rgba(213,246,255,0) 60%),
+    linear-gradient(158deg,#eef2fc 0%,#f3eefc 46%,#eaf6fc 100%) !important;
+  background-attachment:fixed !important; background-repeat:no-repeat !important; background-size:cover !important;
+}
+body{background:transparent !important;}
+
+/* ---- Glass panels ----
+   NOTE: containers must NOT use backdrop-filter — it makes them the containing
+   block for position:fixed menus inside them, which throws dropdowns off-place
+   and lets sibling cards cover them. Containers use a translucent fill instead;
+   real frosted blur is kept only on overlays/popups (which don't wrap menus). */
+.card,.panel,.sect,.lsec,.hero-main,.month-picker,.punch-card,.gate-card,.filter-group,.prt-card{
+  background:rgba(255,255,255,.82) !important;
+  border:1px solid rgba(255,255,255,.7) !important;
+  border-radius:20px !important;
+  box-shadow:0 12px 38px rgba(26,40,72,.10),0 3px 10px rgba(26,40,72,.06),inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(150,170,210,.22) !important;
+}
+.modal,.modal-card,.drawer,.sheet,.ms-pop,.cmp-cols-pop,.month-dropdown,.dialog{
+  background:rgba(255,255,255,.72) !important;
+  -webkit-backdrop-filter:blur(24px) saturate(185%) !important;
+  backdrop-filter:blur(24px) saturate(185%) !important;
+  border:1px solid rgba(255,255,255,.62) !important;
+  border-radius:16px !important;
+  box-shadow:0 18px 50px rgba(26,40,72,.22),inset 0 1px 0 rgba(255,255,255,.85) !important;
+}
+
+/* table / chart wrappers: let the parent glass show through */
+.tbl-wrap,.tablewrap,.table-scroll,.chart-wrap,.tableWrap{
+  background:transparent !important;border-radius:16px !important;border:1px solid rgba(255,255,255,.4) !important;
+}
+.data-table,.tbl-wrap table,.tablewrap table,table{background:transparent !important;}
+thead th,.data-table thead th{background:rgba(255,255,255,.5) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+
+/* ---- Glass buttons ---- */
+.btn,.ghost,.btn-sm,.btn-ghost,.tbtn,.month-btn,.page-tab,.export-csv-btn,.tab,.evq-seg button,.gseg button,.ms-btn,.ms-mini{
+  background:rgba(255,255,255,.5) !important;
+  color:var(--ink) !important;
+  -webkit-backdrop-filter:blur(14px) saturate(160%) !important; backdrop-filter:blur(14px) saturate(160%) !important;
+  border:1px solid rgba(255,255,255,.68) !important;
+  border-radius:13px !important;
+  box-shadow:0 3px 12px rgba(26,40,72,.08),inset 0 1px 0 rgba(255,255,255,.9) !important;
+  transition:transform .12s ease,box-shadow .18s ease,background .18s ease !important;
+}
+.btn:hover,.ghost:hover,.btn-sm:hover,.btn-ghost:hover,.tbtn:hover,.month-btn:hover,.page-tab:hover,.export-csv-btn:hover,.ms-btn:hover,.tab:hover{
+  background:rgba(255,255,255,.74) !important; transform:translateY(-1px) !important;
+  box-shadow:0 8px 22px rgba(26,40,72,.14),inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+/* primary / active: glossy brand */
+.btn.primary,.primary,.btn.on,.tab.on,.page-tab.on,.page-tab.active,.evq-seg button.on,.gseg button.on,.month-btn.on,.tbtn.on,.tbtn.active{
+  background:linear-gradient(180deg,#5b9bff 0%,#3B7DF5 100%) !important;
+  color:#fff !important;border:1px solid rgba(255,255,255,.4) !important;
+  box-shadow:0 6px 18px rgba(59,125,245,.34),inset 0 1px 0 rgba(255,255,255,.5) !important;
+}
+
+/* ---- Chips / pills / badges ---- */
+.chip,.pill,.tag,.badge,.cmp-pill,.sw{
+  -webkit-backdrop-filter:blur(10px) !important;backdrop-filter:blur(10px) !important;
+  border-radius:999px !important;border:1px solid rgba(255,255,255,.55) !important;
+}
+
+/* ---- Inputs ---- */
+input,select,textarea,.search,.sel:not(.selx-opt),.gate-field input{
+  background:rgba(255,255,255,.55) !important;
+  -webkit-backdrop-filter:blur(12px) !important;backdrop-filter:blur(12px) !important;
+  /* a real (if thin) edge — the old near-white border vanished on light panels,
+     leaving the filter controls with no visible boundary */
+  border:1px solid rgba(120,140,180,.34) !important;border-radius:12px !important;
+}
+input:hover,select:hover,textarea:hover,.search:hover,.sel:not(.selx-opt):hover{
+  border-color:rgba(120,140,180,.5) !important;
+}
+input:focus,select:focus,textarea:focus,.search:focus{
+  outline:none !important;border-color:rgba(59,125,245,.6) !important;
+  box-shadow:0 0 0 4px rgba(59,125,245,.16) !important;background:rgba(255,255,255,.74) !important;
+}
+
+/* ---- Thin unified scrollbars ---- */
+*::-webkit-scrollbar{width:10px;height:10px;}
+*::-webkit-scrollbar-thumb{background:rgba(120,135,165,.42);border-radius:20px;border:2px solid transparent;background-clip:content-box;}
+*::-webkit-scrollbar-thumb:hover{background:rgba(120,135,165,.64);background-clip:content-box;}
+*::-webkit-scrollbar-track{background:transparent;}
+:focus-visible{outline:2px solid rgba(59,125,245,.6) !important;outline-offset:2px !important;}
+
+/* ---- Unified page heading (match Inventory / Products) ---- */
+.app-title,.brand h1,.brand-text h1{
+  font-size:17px !important;font-weight:700 !important;letter-spacing:-.01em !important;
+  text-transform:none !important;color:var(--ink) !important;line-height:1.25 !important;margin:0 !important;
+}
+.app-title span,.brand-text p,.brand .sub,.brand-text .sub{
+  font-size:12px !important;font-weight:500 !important;color:var(--mut) !important;
+  letter-spacing:0 !important;text-transform:none !important;display:block !important;margin-top:1px !important;
+}
+/* status dot for Orders/Attendance headings (Inventory/Products & Financial already have a mark) */
+.app-title{position:relative !important;padding-left:18px !important;}
+.app-title::before{content:"";position:absolute;left:0;top:.42em;width:9px;height:9px;border-radius:50%;background:var(--brand);box-shadow:0 0 12px var(--brand);}
+
+/* ===== Financial: dark navy header → light glass (match every other tab) ===== */
+.app-header{
+  background:rgba(255,255,255,.55) !important;
+  -webkit-backdrop-filter:blur(26px) saturate(185%) !important;backdrop-filter:blur(26px) saturate(185%) !important;
+  color:var(--ink) !important;
+  border-bottom:1px solid rgba(255,255,255,.6) !important;
+  box-shadow:0 6px 22px rgba(26,40,72,.08),inset 0 1px 0 rgba(255,255,255,.85) !important;
+}
+.brand-mark{color:#fff !important;box-shadow:0 3px 10px rgba(59,125,245,.35) !important;}
+.data-pill,.unit-mode-toggle{
+  background:rgba(255,255,255,.55) !important;border:1px solid rgba(255,255,255,.66) !important;
+  -webkit-backdrop-filter:blur(12px) !important;backdrop-filter:blur(12px) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+.unit-mode-toggle{color:var(--ink) !important;}
+.data-pill{color:var(--mut) !important;}
+.unit-mode-toggle:hover{border-color:rgba(59,125,245,.5) !important;}
+/* nav tabs → glass pills like the other dashboards */
+.tabs{margin-top:16px !important;border-bottom:none !important;}
+.tab-btn{
+  background:rgba(255,255,255,.5) !important;
+  -webkit-backdrop-filter:blur(14px) saturate(160%) !important;backdrop-filter:blur(14px) saturate(160%) !important;
+  border:1px solid rgba(255,255,255,.68) !important;border-radius:13px !important;
+  box-shadow:0 3px 12px rgba(26,40,72,.08),inset 0 1px 0 rgba(255,255,255,.9) !important;
+  color:var(--mut) !important;font-size:13px !important;font-weight:600 !important;padding:8px 15px !important;margin-bottom:14px !important;
+  transition:transform .12s ease,box-shadow .18s ease,background .18s ease,color .15s ease !important;
+}
+.tab-btn:hover{color:var(--ink) !important;background:rgba(255,255,255,.72) !important;transform:translateY(-1px) !important;}
+.tab-btn.active{
+  background:linear-gradient(180deg,#5b9bff 0%,#3B7DF5 100%) !important;color:#fff !important;border-color:rgba(255,255,255,.4) !important;
+  box-shadow:0 6px 18px rgba(59,125,245,.34),inset 0 1px 0 rgba(255,255,255,.5) !important;
+}
+.tab-btn.active::after{display:none !important;}
+
+/* ===== Upgraded native <select> → searchable glass dropdown (matches .ms style) ===== */
+.selx{position:relative;display:inline-block;vertical-align:middle;}
+.selx-native{visibility:hidden!important;pointer-events:none!important;margin:0!important;}
+.selx-btn{position:absolute;inset:0;width:100%;height:100%;display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.55)!important;-webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important;
+  border:1px solid rgba(120,140,180,.34)!important;border-radius:12px!important;padding:0 12px!important;
+  font:600 13px 'Inter',-apple-system,sans-serif!important;color:var(--ink,#141A24)!important;cursor:pointer;text-align:left;box-sizing:border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85)!important;transition:background .15s ease,box-shadow .15s ease;}
+.selx-btn:hover{background:rgba(255,255,255,.75)!important;border-color:rgba(120,140,180,.55)!important;}
+.selx-btn:focus-visible{outline:2px solid rgba(59,125,245,.55);outline-offset:2px;}
+.selx-btn .selx-val{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.selx-btn .selx-caret{opacity:.55;font-size:11px;}
+.selx-pop{position:fixed;z-index:9000;min-width:210px;max-width:min(92vw,360px);
+  background:rgba(255,255,255,.9)!important;-webkit-backdrop-filter:blur(26px) saturate(185%)!important;backdrop-filter:blur(26px) saturate(185%)!important;
+  border:1px solid rgba(255,255,255,.7)!important;border-radius:14px!important;
+  box-shadow:0 18px 50px rgba(26,40,72,.22),inset 0 1px 0 rgba(255,255,255,.9)!important;padding:8px;}
+.selx-search{width:100%;box-sizing:border-box;background:rgba(255,255,255,.72)!important;border:1px solid rgba(59,125,245,.28)!important;
+  border-radius:10px!important;padding:8px 11px!important;font:500 13px 'Inter',-apple-system,sans-serif!important;color:var(--ink,#141A24)!important;margin-bottom:6px;}
+.selx-search:focus{outline:none!important;border-color:rgba(59,125,245,.6)!important;box-shadow:0 0 0 3px rgba(59,125,245,.15)!important;}
+.selx-list{max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:1px;}
+.selx-opt{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:9px;
+  font:500 13px 'Inter',-apple-system,sans-serif!important;color:var(--ink,#141A24);cursor:pointer;white-space:nowrap;}
+.selx-opt:hover{background:rgba(59,125,245,.12);}
+.selx-opt.selx-on{background:linear-gradient(180deg,#5b9bff,#3B7DF5)!important;color:#fff!important;border:0!important;border-radius:9px!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;}
+.selx-empty{padding:10px 11px;color:var(--mut,#5A6675);font-size:12.5px;}
+.selx-pop .selx-list::-webkit-scrollbar{width:9px;}
+.selx-pop .selx-list::-webkit-scrollbar-thumb{background:rgba(120,135,165,.42);border-radius:20px;border:2px solid transparent;background-clip:content-box;}
+
+/* ===== Contrast safety: keep control text readable on the light glass ===== */
+/* delete / danger buttons stay red on a soft red glass */
+.btn.del,.btn.del2,.del,.del2,.dngr{
+  color:var(--bad,#E5484D) !important;
+  background:rgba(229,72,77,.10) !important;
+  border:1px solid rgba(229,72,77,.34) !important;
+  -webkit-backdrop-filter:blur(10px) !important;backdrop-filter:blur(10px) !important;
+}
+/* filled / active / primary controls keep white text on their colored fill */
+.btn.primary,.primary,.btn.on,.tab.on,.page-tab.on,.page-tab.active,.tab-btn.active,
+.evq-seg button.on,.gseg button.on,.month-btn.on,.tbtn.on,.tbtn.active,.chip.on,.pill.on,
+.evq-seg.on,.prt-chip.on,button.on.active,.active.brandfill{ color:#fff !important; }
+
+/* ---- Filter controls: a visible thin edge ---- */
+.tog{
+  border:1px solid rgba(120,140,180,.34) !important; border-radius:11px !important;
+  padding:6px 11px !important; background:rgba(255,255,255,.5) !important;
+}
+.tog:hover{ border-color:rgba(120,140,180,.5) !important; }
+.seg{ border:1px solid rgba(120,140,180,.34) !important; border-radius:12px !important; overflow:hidden; }
+.seg button{ border-radius:0 !important; border:0 !important; box-shadow:none !important; }
+.seg button+button{ border-left:1px solid rgba(120,140,180,.22) !important; }
+
+/* multi-select rows + the Clear / Done header */
+.selx-head{display:flex;gap:6px;justify-content:space-between;margin-bottom:6px}
+.selx-head button{flex:1;cursor:pointer;border:1px solid rgba(120,140,180,.34);background:rgba(255,255,255,.7);
+  color:var(--ink,#141A24);border-radius:9px;padding:5px 10px;font:600 11.5px 'Inter',sans-serif}
+.selx-head button:hover{border-color:#3B7DF5;color:#3B7DF5}
+.selx-head .selx-done{background:linear-gradient(180deg,#5b9bff,#3B7DF5);color:#fff;border-color:transparent}
+.selx-head .selx-done:hover{color:#fff}
+.selx-opt .selx-box{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+  border-radius:4px;border:1.5px solid rgba(120,140,180,.55);font-size:10px;line-height:1;flex:0 0 auto}
+.selx-opt .selx-box.on{background:#3B7DF5;border-color:#3B7DF5;color:#fff}
+.selx-opt.selx-on .selx-box{border-color:rgba(255,255,255,.8);color:#fff}
+
+/* ---- Products tabs (#tabs) → the same glass pills Live Inventory uses ----
+   Kept here in the theme source so re-injecting the theme cannot wipe it. */
+#tabs{margin-top:16px !important; border-bottom:none !important; gap:7px !important; flex-wrap:wrap;}
+#tabs button{
+  font-family:'Inter',-apple-system,sans-serif !important; font-weight:600 !important; font-size:13px !important;
+  color:var(--ink) !important;
+  background:rgba(255,255,255,.5) !important;
+  -webkit-backdrop-filter:blur(14px) saturate(160%) !important; backdrop-filter:blur(14px) saturate(160%) !important;
+  border:1px solid rgba(255,255,255,.68) !important; border-bottom:1px solid rgba(255,255,255,.68) !important;
+  border-radius:13px !important; padding:9px 16px !important; margin-bottom:0 !important;
+  box-shadow:0 3px 12px rgba(26,40,72,.08),inset 0 1px 0 rgba(255,255,255,.9) !important;
+  transition:transform .12s ease,box-shadow .18s ease,background .18s ease !important;
+}
+#tabs button:hover{
+  background:rgba(255,255,255,.74) !important; transform:translateY(-1px) !important;
+  box-shadow:0 8px 22px rgba(26,40,72,.14),inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+#tabs button.on{
+  background:linear-gradient(180deg,#5b9bff 0%,#3B7DF5 100%) !important; color:#fff !important;
+  border-color:rgba(255,255,255,.4) !important;
+  box-shadow:0 6px 18px rgba(59,125,245,.34),inset 0 1px 0 rgba(255,255,255,.5) !important;
+}
+#tabs button.on .pill{ background:rgba(255,255,255,.26) !important; border-color:rgba(255,255,255,.42) !important; color:#fff !important; }
+
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{
+  --ink:#1C232C; --ink-soft:#5B6472; --ink-dim:#8891A0;
+  --line:#C9CFD8; --line-dk:#9AA3B0;
+  --bg:#EEF0F3; --panel:#FFFFFF; --panel-2:#F3F5F8; --panel-3:#EEF2F7;
+  --brand:#3B7DF5; --brand-2:#5b9bff; --alert:#F26B5E; --bar:#F2A93B;
+  --green:#1B7A3D; --green-soft:#DFF3E6;
+  --amber:#8A5A10; --amber-soft:#FCEBCF; --red:#B22A3E; --red-soft:#FBDDD9;
+  --blue-soft:#DCEBFF; --grey-soft:#EEF0F3;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;font-family:'Inter',-apple-system,sans-serif;font-size:13px;color:var(--ink);}
+body{background:transparent;overflow:auto;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;background:rgba(255,255,255,.75);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,210,225,.6);position:sticky;top:0;z-index:60;box-shadow:0 2px 12px rgba(26,40,72,.04);}
+.app-title{font-weight:800;font-size:15px;letter-spacing:.02em;color:var(--ink);margin-right:auto;display:flex;flex-direction:column;line-height:1.15;}
+.app-title span{color:var(--ink-soft);font-weight:500;font-size:11px;margin-top:2px;}
+.tbtn{font-family:inherit;font-weight:600;font-size:12.5px;color:#fff;background:linear-gradient(180deg,var(--brand-2),var(--brand));border:0;padding:9px 15px;border-radius:10px;cursor:pointer;box-shadow:0 3px 12px rgba(59,125,245,.28);transition:transform .1s ease,box-shadow .15s ease;}
+.tbtn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(59,125,245,.36);}
+.tbtn.ghost{background:rgba(255,255,255,.75);color:var(--ink);border:1px solid var(--line);box-shadow:0 1px 3px rgba(26,40,72,.06);}
+.tbtn.ghost:hover{background:#fff;}
+.tbtn.danger{background:linear-gradient(180deg,#f9877a,#e75c50);box-shadow:0 3px 12px rgba(231,92,80,.28);}
+
+.wrap{padding:16px;max-width:1600px;margin:0 auto;}
+
+/* alert banner */
+.alert-banner{margin-bottom:14px;padding:14px 16px;border-radius:14px;background:linear-gradient(90deg,rgba(242,169,59,.18),rgba(242,169,59,.06));border:1px solid rgba(242,169,59,.5);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.alert-banner.overdue{background:linear-gradient(90deg,rgba(242,107,94,.18),rgba(242,107,94,.06));border-color:rgba(242,107,94,.5);}
+.alert-banner .icon{font-size:22px;line-height:1;}
+.alert-banner .headline{font-weight:700;font-size:14px;color:var(--ink);}
+.alert-banner .detail{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+.alert-banner ul{margin:0;padding:0 0 0 3px;list-style:none;display:flex;flex-wrap:wrap;gap:6px;}
+.alert-banner li{background:rgba(255,255,255,.65);border:1px solid rgba(200,210,225,.7);border-radius:8px;padding:4px 9px;font-size:11.5px;font-weight:600;color:var(--ink);}
+.alert-banner li b{color:var(--brand);}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px;}
+.kpi{background:rgba(255,255,255,.75);border:1px solid rgba(200,210,225,.6);border-radius:12px;padding:12px 14px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);cursor:pointer;transition:transform .12s ease;user-select:none;}
+.kpi:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,40,72,.08);}
+.kpi.active{outline:2px solid var(--brand);}
+.kpi .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-dim);font-weight:700;}
+.kpi .val{font:700 22px/1.1 'IBM Plex Mono',monospace;margin-top:3px;color:var(--ink);}
+.kpi .sub{font-size:10.5px;color:var(--ink-soft);margin-top:2px;}
+.kpi.alert .val{color:var(--bar);} .kpi.overdue .val{color:var(--alert);} .kpi.delivered .val{color:var(--green);}
+
+/* filters */
+.filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;background:rgba(255,255,255,.55);border:1px solid rgba(200,210,225,.5);border-radius:12px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);}
+.filters input[type="search"]{flex:1 1 220px;min-width:180px;padding:8px 12px;font:500 12.5px 'Inter',sans-serif;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.85);outline:none;}
+.filters input[type="search"]:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(59,125,245,.15);}
+.filters select{padding:8px 10px;font:500 12.5px 'Inter',sans-serif;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.85);outline:none;cursor:pointer;}
+.filters label{font-size:11.5px;color:var(--ink-soft);font-weight:600;}
+.filters button{padding:7px 12px;font:600 12px 'Inter',sans-serif;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.85);color:var(--ink-soft);cursor:pointer;}
+.filters button:hover{background:#fff;color:var(--ink);}
+
+/* table */
+.tablewrap{background:rgba(255,255,255,.75);border:1px solid rgba(200,210,225,.6);border-radius:14px;overflow:auto;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 4px 20px rgba(26,40,72,.06);}
+table.ct{width:100%;border-collapse:collapse;font-size:12px;}
+table.ct thead th{position:sticky;top:0;background:rgba(243,245,248,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:grab;user-select:none;}
+table.ct thead th:active{cursor:grabbing;}
+table.ct thead th.drag-src{opacity:.35;}
+table.ct thead th.drop-before{box-shadow:inset 3px 0 0 var(--brand);}
+table.ct thead th.drop-after{box-shadow:inset -3px 0 0 var(--brand);}
+table.ct thead th:hover{background:rgba(230,235,242,.95);}
+table.ct thead th.sorted::after{content:' ▲';color:var(--brand);font-size:9px;}
+table.ct thead th.sorted.desc::after{content:' ▼';}
+table.ct td{padding:9px 12px;border-bottom:1px solid rgba(200,210,225,.35);vertical-align:top;}
+table.ct tbody tr{transition:background .12s ease;cursor:pointer;}
+table.ct tbody tr:hover{background:rgba(220,235,255,.4);}
+table.ct tbody tr.alert{background:rgba(252,235,207,.4);}
+table.ct tbody tr.alert:hover{background:rgba(252,235,207,.7);}
+table.ct tbody tr.overdue{background:rgba(251,221,217,.5);}
+table.ct tbody tr.overdue:hover{background:rgba(251,221,217,.75);}
+table.ct tbody tr.delivered{background:rgba(223,243,230,.35);}
+table.ct tbody tr.delivered:hover{background:rgba(223,243,230,.6);}
+table.ct .ct-cont{font:700 12px 'IBM Plex Mono',monospace;color:var(--ink);}
+table.ct .ct-eta{font-weight:600;}
+table.ct .ct-eta small{display:block;font-size:10.5px;font-weight:600;margin-top:2px;}
+table.ct .ct-eta.alert small{color:var(--amber);}
+table.ct .ct-eta.overdue small{color:var(--red);}
+table.ct .ct-eta.delivered small{color:var(--green);}
+.status-badge{display:inline-block;padding:3px 8px;border-radius:8px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
+.status-badge.pending{background:var(--blue-soft);color:var(--brand);}
+.status-badge.alert{background:var(--amber-soft);color:var(--amber);}
+.status-badge.overdue{background:var(--red-soft);color:var(--red);}
+.status-badge.delivered{background:var(--green-soft);color:var(--green);}
+.status-badge.unknown{background:var(--grey-soft);color:var(--ink-soft);}
+
+.empty{padding:40px 20px;text-align:center;color:var(--ink-soft);}
+.empty h3{color:var(--ink);margin:8px 0;font-size:16px;}
+.empty p{font-size:13px;line-height:1.6;max-width:520px;margin:8px auto;}
+.empty button{margin-top:14px;}
+
+.imp-count{margin-left:auto;font-size:11.5px;color:var(--ink-soft);font-weight:600;}
+
+/* modal */
+.mdlbg{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;background:rgba(26,40,72,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+.mdlbg.open{display:flex;}
+.mdl{width:min(94vw,760px);max-height:90vh;overflow:auto;padding:20px 22px;border-radius:16px;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,.8);box-shadow:0 24px 70px rgba(26,40,72,.3);}
+.mdl h2{margin:0 0 4px;font-size:16px;color:var(--ink);}
+.mdl .sub{color:var(--ink-soft);font-size:12px;margin-bottom:16px;}
+.mdl .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px;}
+.mdl .field{display:flex;flex-direction:column;gap:3px;}
+.mdl .field.wide{grid-column:1/-1;}
+.mdl .field label{font-size:10.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;}
+.mdl .field input,.mdl .field textarea{padding:7px 10px;font:500 12.5px 'Inter',sans-serif;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.85);outline:none;font-family:inherit;}
+.mdl .field textarea{min-height:60px;font-family:inherit;resize:vertical;}
+.mdl .field input:focus,.mdl .field textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(59,125,245,.15);}
+.mdl .row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+.mdl .kv{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);border-bottom:1px dashed rgba(200,210,225,.5);padding:3px 0;}
+.mdl .kv b{color:var(--ink);font-weight:600;}
+
+/* settings — column list */
+.date-est{color:var(--ink-soft);font-style:italic;border-bottom:1px dotted var(--ink-soft);cursor:help}
+.date-none{color:var(--ink-soft)}
+.slip-field{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:34px}
+.slip-field .slip-btn{max-width:100%;font-size:12px;padding:6px 10px}
+.slip-hint{font-size:11px;color:var(--ink-soft)}
+.slip-td{white-space:nowrap}
+.slip-btn{border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:7px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--ink);max-width:150px;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+.slip-btn:hover{border-color:var(--brand);color:var(--brand)}
+.slip-btn.add{color:var(--ink-soft)}
+.slip-btn.del{margin-left:3px;padding:3px 6px;color:var(--ink-soft)}
+.slip-btn.del:hover{color:#E5484D;border-color:#E5484D}
+.slip-file{display:inline-flex;align-items:center}
+.set-col-list{display:flex;flex-direction:column;gap:5px;margin-top:4px;}
+.col-tick{display:flex;align-items:center;margin:0}
+.col-tick input{width:15px;height:15px;accent-color:var(--brand);cursor:pointer}
+.set-col-item.col-off{opacity:.62}
+.set-col-item.col-off .col-name{text-decoration:line-through}
+.set-col-item{display:flex;align-items:center;gap:9px;padding:8px 10px;background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:9px;cursor:grab;font-size:12.5px;user-select:none;transition:box-shadow .15s ease,transform .15s ease;}
+.set-col-item:active{cursor:grabbing;}
+.set-col-item.drag-src{opacity:.35;}
+.set-col-item.drop-before{box-shadow:0 -2px 0 var(--brand) inset;}
+.set-col-item.drop-after{box-shadow:0 2px 0 var(--brand) inset;}
+.set-col-item .drag-grip{color:var(--ink-dim);font-size:14px;line-height:1;user-select:none;}
+.set-col-item .col-name{flex:1;font-weight:600;color:var(--ink);}
+.set-col-item .col-btn{width:26px;height:26px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer;font-size:11px;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;padding:0;}
+.set-col-item .col-btn:hover{color:var(--ink);border-color:var(--ink-soft);}
+.set-col-item .col-btn:disabled{opacity:.3;cursor:default;}
+.imp-summary{padding:14px;border-radius:12px;background:rgba(223,243,230,.4);border:1px solid rgba(46,190,120,.4);color:var(--green);font-size:13px;line-height:1.55;margin-bottom:12px;}
+.imp-summary b{color:var(--ink);font-weight:800;}
+table.imp-hist{width:100%;border-collapse:collapse;font-size:12px}
+table.imp-hist th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--mut);font-weight:700;padding:5px 8px;border-bottom:1px solid var(--line)}
+table.imp-hist th.num,table.imp-hist td.num{text-align:right}
+table.imp-hist td{padding:5px 8px;border-bottom:1px solid var(--line-2,#EEF1F5)}
+table.imp-hist tbody tr:hover{background:#F7F9FC}
+.imp-wrap{position:relative;display:inline-block}
+.imp-wrap .caret{font-size:10px;opacity:.8;margin-left:2px}
+.imp-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:190px;background:#fff;
+  border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 26px rgba(15,22,35,.14);
+  padding:5px;display:none;z-index:60}
+.imp-menu.open{display:block}
+.imp-menu button{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;
+  font:inherit;font-size:12.5px;padding:7px 10px;border-radius:7px;color:var(--ink)}
+.imp-menu button:hover{background:#F1F5FB}
+.imp-error{padding:14px;border-radius:12px;background:rgba(251,221,217,.6);border:1px solid rgba(178,42,62,.4);color:var(--red);font-size:12.5px;line-height:1.5;margin-bottom:12px;}
+.imp-loading{padding:22px;text-align:center;color:var(--ink-soft);}
+.spin{display:inline-block;width:22px;height:22px;border:3px solid rgba(120,135,165,.35);border-top-color:var(--brand);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.kpi-slip{font-weight:700;font-size:11.5px}
+.kpi-slip.warn{color:#B7791F}
+.kpi-slip.ok{color:var(--good)}
+.ui-ask-ov{position:fixed;inset:0;background:rgba(15,22,35,.45);display:none;align-items:center;justify-content:center;z-index:9999}
+.ui-ask{background:#fff;border-radius:14px;padding:20px 22px;max-width:440px;box-shadow:0 24px 60px rgba(15,22,35,.28)}
+.ui-ask-msg{font-size:13.5px;line-height:1.5;margin-bottom:16px;white-space:pre-wrap}
+.ui-ask-btns{display:flex;gap:8px;justify-content:flex-end}
+.ui-ask .btn.danger{background:#E5484D;border-color:#E5484D;color:#fff}
+</style>
+</head>
+<body class="hw-embedded">
+<div class="toolbar">
+  <div class="app-title">🚢 Containers <span>Home Weavers Container Tracker</span></div>
+  <div class="imp-wrap">
+    <button id="importBtn" class="tbtn" title="Import an Excel file — new containers are added, existing ones updated by container number">📥 Import Excel <span class="caret">▾</span></button>
+    <div class="imp-menu" id="impMenu">
+      <button type="button" data-imp="file">Choose a file…</button>
+      <button type="button" data-imp="hist">Import history</button>
+    </div>
+  </div>
+  <input type="file" id="importFile" accept=".xlsx" hidden>
+  <input type="file" id="slipFile" hidden>
+  <button id="addBtn" class="tbtn ghost">+ New container</button>
+  <button id="exportBtn" class="tbtn ghost">⤓ Export</button>
+  <button id="clearBtn" class="tbtn ghost" title="Delete all container records">🗑 Clear all</button>
+  <button id="settingsBtn" class="tbtn ghost" title="Alert threshold, columns, and other preferences">⚙ Settings</button>
+  <span class="imp-count" id="totalCount">0 containers</span>
+</div>
+<div class="wrap">
+  <div id="alertBanner"></div>
+  <div class="kpis">
+    <div class="kpi" data-status="alert"><div class="lbl">🔔 Alert (≤<span id="alertDaysLbl">5</span> days)</div><div class="val" id="kpiAlert">0</div><div class="sub" id="kpiAlertSub">arriving soon</div></div>
+    <div class="kpi overdue" data-status="overdue"><div class="lbl">⚠︎ Overdue</div><div class="val" id="kpiOverdue">0</div><div class="sub">ETA passed, not delivered</div></div>
+    <div class="kpi" data-status="intransit"><div class="lbl">🕐 In transit</div><div class="val" id="kpiPending">0</div><div class="sub">sailing or arriving soon</div></div>
+    <div class="kpi delivered" data-status="delivered"><div class="lbl">✓ Delivered</div><div class="val" id="kpiDelivered">0</div><div class="sub">arrived</div></div>
+    <div class="kpi" data-status="all"><div class="lbl">📦 Total</div><div class="val" id="kpiTotal">0</div><div class="sub">all containers</div></div>
+  </div>
+  <div class="filters">
+    <input type="search" id="search" placeholder="🔍 Search by container #, vendor, invoice, commodity…">
+    <label>Line: <select id="fLine"><option value="">All</option></select></label>
+    <label>Vendor: <select id="fVendor"><option value="">All</option></select></label>
+    <label>Customer: <select id="fCustomer"><option value="">All</option></select></label>
+    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.6);border:1px solid var(--line);">
+      <input type="checkbox" id="fShowReceived" style="width:15px;height:15px;accent-color:var(--brand);cursor:pointer;">
+      <span>Show received / delivered</span>
+    </label>
+    <button id="clearFilters">Reset</button>
+  </div>
+  <div id="tableWrap"></div>
+</div>
+
+<!-- edit/detail modal -->
+<div class="mdlbg" id="editMdl">
+  <div class="mdl">
+    <h2 id="editTitle">Container details</h2>
+    <div class="sub" id="editSub"></div>
+    <div class="grid">
+      <div class="field"><label>Container #</label><input id="ef-container" type="text"></div>
+      <div class="field"><label>Vendor</label><input id="ef-vendor" type="text"></div>
+      <div class="field wide"><label>Invoice #</label><input id="ef-invoice" type="text"></div>
+      <div class="field wide"><label>Commodity</label><input id="ef-commodity" type="text"></div>
+      <div class="field"><label>Customer</label><input id="ef-customer" type="text"></div>
+      <div class="field"><label>Shipping line</label><input id="ef-shippingLine" type="text"></div>
+      <div class="field"><label>Ex-factory (YYYY-MM-DD)</label><input id="ef-exFactory" type="date"></div>
+      <div class="field"><label>Vessel plan</label><input id="ef-vesselPlan" type="date"></div>
+      <div class="field"><label>Actual ETD</label><input id="ef-actualETD" type="date"></div>
+      <div class="field"><label>ETA</label><input id="ef-eta" type="date"></div>
+      <div class="field"><label>Amount (USD)</label><input id="ef-amtUSD" type="number" step="0.01"></div>
+      <div class="field"><label>Freight cost</label><input id="ef-freightCost" type="number" step="0.01"></div>
+      <div class="field"><label>Terminal</label><input id="ef-terminal" type="text"></div>
+      <div class="field"><label>ISF</label><input id="ef-isf" type="text"></div>
+      <div class="field"><label>Bill number</label><input id="ef-billNumber" type="text"></div>
+      <div class="field"><label>HBL #</label><input id="ef-hbl" type="text"></div>
+      <div class="field wide"><label>Master BL #</label><input id="ef-masterBL" type="text"></div>
+      <div class="field wide"><label>Comments</label><textarea id="ef-comments"></textarea></div>
+      <div class="field"><label>Vendor packing slip</label><div id="ef-slip-vendorSlip" class="slip-field"></div></div>
+      <div class="field"><label>Printable packing slip</label><div id="ef-slip-printSlip" class="slip-field"></div></div>
+      <div class="field wide" style="margin-top:6px;padding:10px 12px;background:rgba(46,190,120,.08);border:1px solid rgba(46,190,120,.28);border-radius:9px;"><label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:12.5px;font-weight:600;color:#177A4B;cursor:pointer;"><input id="ef-delivered" type="checkbox" style="width:16px;height:16px;accent-color:#1B7A3D;">Container received / delivered</label></div>
+    </div>
+    <div class="row">
+      <button class="tbtn ghost danger" id="editDelBtn">🗑 Delete</button>
+      <button class="tbtn ghost" id="editCancel">Cancel</button>
+      <button class="tbtn" id="editSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- import preview modal -->
+<div class="mdlbg" id="impMdl">
+  <div class="mdl">
+    <h2>Import from Excel</h2>
+    <div class="sub" id="impSub">Reading file…</div>
+    <div id="impBody"><div class="imp-loading"><span class="spin"></span> Parsing workbook…</div></div>
+    <div class="row" id="impActions" style="display:none">
+      <button class="tbtn ghost" id="impCancel">Cancel</button>
+      <button class="tbtn" id="impConfirm">Apply changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- settings modal -->
+<div class="mdlbg" id="settingsMdl">
+  <div class="mdl">
+    <h2>⚙ Preferences</h2>
+    <div class="sub">These are saved in this browser and used for alerts and layout.</div>
+    <div class="grid">
+      <div class="field wide"><label>Alert threshold (days before ETA)</label>
+        <input id="setAlertDays" type="number" min="1" max="365" step="1">
+        <small style="font-size:11px;color:var(--ink-soft);margin-top:3px;">Containers arriving within this many days will show in the alert banner and turn amber in the table.</small>
+      </div>
+      <div class="field wide"><label>Projected dates</label>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:400;cursor:pointer">
+          <input type="checkbox" id="setEstimate" style="width:15px;height:15px;accent-color:var(--brand);cursor:pointer;">
+          <span>Estimate missing ETD / ETA from past shipments</span>
+        </label>
+        <small style="font-size:11px;color:var(--ink-soft);margin-top:3px;">Containers imported without dates get a projected date, shown as <b>~14 Aug 2026</b>. Based on the median ex-factory&rarr;ETD and ETD&rarr;ETA of previous containers on the same shipping line, falling back to all lines. Hover a projected date to see the basis. Estimates are display-only and never overwrite imported data.</small>
+      </div>
+      <div class="field wide"><label>Columns</label>
+        <div class="row" style="justify-content:flex-start;gap:8px;margin:0 0 8px">
+          <button class="tbtn ghost" id="setColAll" type="button">Show all</button>
+          <button class="tbtn ghost" id="setColNone" type="button">Hide all</button>
+          <span class="imp-count" id="setColCount"></span>
+        </div>
+        <div id="setColList" class="set-col-list"></div>
+        <small style="font-size:11px;color:var(--ink-soft);margin-top:3px;">Tick a column to show it. Drag or use ▲▼ to reorder. Hiding a column only affects this table — Export still writes every field.</small>
+      </div>
+    </div>
+    <div class="row">
+      <button class="tbtn ghost" id="setPinBtn" title="Set, change or remove the PIN that protects packing slips">Slip PIN</button>
+        <button class="tbtn ghost" id="setResetBtn" title="Restore defaults">↺ Reset</button>
+      <button class="tbtn ghost" id="setCancel">Close</button>
+      <button class="tbtn" id="setSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Homeweavers Container Tracker
+   Storage: IndexedDB (hw_containers / kv / list)
+   Import: SheetJS lazy-loaded from CDN on first import
+   Alerts: ETA within 5 days (or overdue)
+============================================================ */
+(function(){
+'use strict';
+
+const DB_NAME = 'hw_containers';
+const STORE = 'kv';
+const KEY = 'list';
+
+/* ---------------- IndexedDB helpers ---------------- */
+let _db = null;
+function openDB(){
+  if (_db) return Promise.resolve(_db);
+  return new Promise((res, rej) => {
+    const rq = indexedDB.open(DB_NAME, 1);
+    rq.onupgradeneeded = () => { const db = rq.result; if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE); };
+    rq.onsuccess = () => { _db = rq.result; res(_db); };
+    rq.onerror = () => rej(rq.error);
+  });
+}
+function idbGet(key){
+  return openDB().then(db => new Promise((res, rej) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const rq = tx.objectStore(STORE).get(key);
+    rq.onsuccess = () => res(rq.result);
+    rq.onerror = () => rej(rq.error);
+  }));
+}
+function idbDel(key){
+  return openDB().then(db => new Promise((res, rej) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).delete(key);
+    tx.oncomplete = () => res(true);
+    tx.onerror = () => rej(tx.error);
+  }));
+}
+function idbPut(key, val){
+  return openDB().then(db => new Promise((res, rej) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).put(val, key);
+    tx.oncomplete = () => res(true);
+    tx.onerror = () => rej(tx.error);
+    tx.onabort = () => rej(tx.error);
+  }));
+}
+
+/* ---------------- state ---------------- */
+let CONTAINERS = [];        // array of records
+/* Opens on what is still on the water - that is the working view. Delivered
+   containers are history and are a click away under the Delivered card. */
+let UI = { statusFilter:'intransit', line:'', vendor:'', customer:'', search:'', sort:'eta', sortDir:1, showReceived:false };
+const DEFAULT_SETTINGS = { alertDays: 5, columnOrder: null, hiddenCols: [], knownCols: [], estimateDates: true };
+let SETTINGS = { ...DEFAULT_SETTINGS };
+
+/* ---------------- utils ---------------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+function todayISO(){
+  /* LOCAL date components, so users in +5:30 (India) don't see off-by-one
+     days in the early hours of the morning. */
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function daysBetween(a, b){ return Math.floor((new Date(b) - new Date(a)) / 86400000); }
+
+/* Container # normalisation — 4 letters + 6-7 digits, ignore trailing junk. */
+function normContainer(raw){
+  if (!raw) return '';
+  const s = String(raw).replace(/[\s\r\n]+/g,'').toUpperCase();
+  const m = /([A-Z]{4}\d{6,7})/.exec(s);
+  return m ? m[1] : s.replace(/[^A-Z0-9]/g,'').slice(0,20);
+}
+
+/* Format an integer month/day/year triple to YYYY-MM-DD, or null if invalid. */
+function _fmtDMY(y, mo, day){
+  if (mo < 1 || mo > 12 || day < 1 || day > 31) return null;
+  return `${y}-${String(mo).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+}
+
+/* Parse a value that could be a date. Returns YYYY-MM-DD or null.
+   Format rules per Home Weavers convention:
+     - Dots (19.06.2026)     → DD.MM.YYYY  (day first, Indian/European)
+     - Slashes (06/19/2026)  → MM/DD/YYYY  (month first, US)
+     - Non-ISO dashes        → MM-DD-YYYY  (month first, US)
+     - YYYY-MM-DD or ISO     → year first (unambiguous)
+   Falls back to auto-swap if the month component would be > 12. */
+function parseDate(v){
+  if (v == null || v === '' || v === 'NaN') return null;
+
+  /* Date object — use LOCAL components (not UTC toISOString) to avoid a
+     one-day shift in eastern timezones. SheetJS often produces Date
+     objects at midnight local time; ISO conversion would rewind them. */
+  if (v instanceof Date && !isNaN(v)){
+    return `${v.getFullYear()}-${String(v.getMonth()+1).padStart(2,'0')}-${String(v.getDate()).padStart(2,'0')}`;
+  }
+
+  /* Excel serial number (days since 1899-12-30). */
+  if (typeof v === 'number' && v > 25000 && v < 60000){
+    const ms = Math.round((v - 25569) * 86400000);
+    const d = new Date(ms);
+    if (!isNaN(d)){
+      return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+    }
+  }
+
+  const s = String(v).trim();
+  if (!s) return null;
+
+  /* ISO YYYY-MM-DD (year first — always unambiguous). */
+  let m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);
+  if (m){
+    const r = _fmtDMY(m[1], +m[2], +m[3]);
+    if (r) return r;
+  }
+
+  /* DOT-separated → DAY first (DD.MM.YYYY, Indian convention). */
+  m = /^(\d{1,2})\.(\d{1,2})\.(\d{2,4})/.exec(s);
+  if (m){
+    let y = m[3]; if (y.length === 2) y = (+y > 50 ? '19' : '20') + y;
+    let day = +m[1], mo = +m[2];
+    /* safety: if day > 12 and month <= 12 that's clearly day-first (already
+       assumed); if month > 12 and day <= 12 it slipped in as MM.DD.YYYY —
+       swap. */
+    if (mo > 12 && day <= 12){ const t = mo; mo = day; day = t; }
+    const r = _fmtDMY(y, mo, day);
+    if (r) return r;
+  }
+
+  /* SLASH- or non-ISO DASH-separated → MONTH first (MM/DD/YYYY, US). */
+  m = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/.exec(s);
+  if (m){
+    let y = m[3]; if (y.length === 2) y = (+y > 50 ? '19' : '20') + y;
+    let mo = +m[1], day = +m[2];
+    /* safety: if the "month" component is > 12 but the "day" component is <= 12,
+       the file used DD-MM order — swap. */
+    if (mo > 12 && day <= 12){ const t = mo; mo = day; day = t; }
+    const r = _fmtDMY(y, mo, day);
+    if (r) return r;
+  }
+
+  /* MMM DD, YYYY  (e.g. "07 Dec 2024" or "Dec 07, 2024"). */
+  m = /(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+(\d{4})/i.exec(s);
+  if (m){
+    const mo = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(m[2].toLowerCase())+1;
+    const r = _fmtDMY(m[3], mo, +m[1]);
+    if (r) return r;
+  }
+
+  /* Fallback: Date constructor (use LOCAL components again).
+     Reject if the year JS invented doesn't appear in the input string —
+     otherwise inputs like "3-Jun" silently default to year 2001. */
+  const d = new Date(s);
+  if (!isNaN(d) && d.getFullYear() > 1990 && d.getFullYear() < 2100){
+    const yr = d.getFullYear(), yr2 = String(yr).slice(2);
+    if (s.indexOf(String(yr)) < 0 && s.indexOf(yr2) < 0) return null;
+    return `${yr}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  return null;
+}
+
+/* Parse an amount (strip $, commas). */
+function parseAmt(v){
+  if (v == null || v === '') return null;
+  if (typeof v === 'number') return v;
+  const s = String(v).replace(/[^\d.\-]/g,'');
+  if (!s) return null;
+  const n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+
+/* Status computation. */
+function isDelivered(rec){
+  const c = (rec.comments || '').toLowerCase();
+  return /\b(delivered|discharged|received|gate out|released)\b/.test(c) || rec.deliveredManual === true;
+}
+/* ---------------- ETD / ETA estimation ----------------
+   A container imported without dates shows as "unknown". Rather than leaving it
+   blank we project from how long previous shipments actually took:
+     ex-factory -> ETD   (time to load and sail)
+     ETD        -> ETA   (transit)
+   Medians, not averages, so one delayed container doesn't skew everything.
+   Estimates are derived at render time and never written into the record. */
+const LEAD_MIN_SAMPLES = 3;
+let LEADS = null;
+
+function addDaysISO(iso, n){
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d)) return null;
+  d.setDate(d.getDate() + Math.round(n));
+  return d.toISOString().slice(0,10);
+}
+function median(arr){
+  if (!arr.length) return null;
+  const a = arr.slice().sort((x,y) => x - y), m = a.length >> 1;
+  return a.length % 2 ? a[m] : Math.round((a[m-1] + a[m]) / 2);
+}
+function buildLeads(){
+  const load = { all:[] }, transit = { all:[] };
+  CONTAINERS.forEach(c => {
+    const line = (c.shippingLine || '').trim().toLowerCase();
+    if (c.exFactory && c.actualETD){
+      const d = daysBetween(c.exFactory, c.actualETD);
+      if (d >= 0 && d <= 120){ load.all.push(d); if (line){ (load[line] = load[line] || []).push(d); } }
+    }
+    if (c.actualETD && c.eta){
+      const d = daysBetween(c.actualETD, c.eta);
+      if (d >= 0 && d <= 180){ transit.all.push(d); if (line){ (transit[line] = transit[line] || []).push(d); } }
+    }
+  });
+  const pick = (bag, line) => {
+    const k = (line || '').trim().toLowerCase();
+    if (k && bag[k] && bag[k].length >= LEAD_MIN_SAMPLES) return { days: median(bag[k]), n: bag[k].length, scope: 'line' };
+    if (bag.all.length >= LEAD_MIN_SAMPLES) return { days: median(bag.all), n: bag.all.length, scope: 'all' };
+    return null;
+  };
+  LEADS = {
+    load: line => pick(load, line),
+    transit: line => pick(transit, line),
+    nLoad: load.all.length,
+    nTransit: transit.all.length
+  };
+  return LEADS;
+}
+/* Returns {etd, eta, etdEst, etaEst, basis} — *Est flags mean the value was projected. */
+function estimateDates(c){
+  if (!LEADS) buildLeads();
+  const out = { etd: c.actualETD || null, eta: c.eta || null, etdEst:false, etaEst:false, basis:'' };
+  if (!SETTINGS.estimateDates) return out;
+  const bits = [];
+  if (!out.etd && c.exFactory){
+    const L = LEADS.load(c.shippingLine);
+    if (L){ out.etd = addDaysISO(c.exFactory, L.days); out.etdEst = !!out.etd;
+      if (out.etd) bits.push('ex-factory + ' + L.days + 'd load (' + (L.scope === 'line' ? c.shippingLine : 'all lines') + ', ' + L.n + ' shipments)'); }
+  }
+  if (!out.eta && out.etd){
+    const T = LEADS.transit(c.shippingLine);
+    if (T){ out.eta = addDaysISO(out.etd, T.days); out.etaEst = !!out.eta;
+      if (out.eta) bits.push((out.etdEst ? 'projected ETD' : 'ETD') + ' + ' + T.days + 'd transit (' + (T.scope === 'line' ? c.shippingLine : 'all lines') + ', ' + T.n + ' shipments)'); }
+  }
+  out.basis = bits.join('; ');
+  return out;
+}
+function estDateCell(c, field){
+  const e = estimateDates(c);
+  const iso = field === 'eta' ? e.eta : e.etd;
+  const isEst = field === 'eta' ? e.etaEst : e.etdEst;
+  if (!iso) return '<span class="date-none">\u2014</span>';
+  if (!isEst) return fmtDate(iso);
+  return '<span class="date-est" title="Projected: ' + esc(e.basis) + '">~' + fmtDate(iso) + '</span>';
+}
+function computeStatus(rec, todayStr){
+  if (!todayStr) todayStr = todayISO();
+  if (isDelivered(rec)) return 'delivered';
+  let eta = rec.eta;
+  if (!eta && SETTINGS.estimateDates){ const e = estimateDates(rec); eta = e.eta; }
+  if (!eta) return 'unknown';
+  const diff = daysBetween(todayStr, eta);
+  if (diff < 0) return 'overdue';
+  if (diff <= SETTINGS.alertDays) return 'alert';
+  return 'pending';
+}
+function daysLabel(rec){
+  let eta = rec.eta;
+  if (!eta && SETTINGS.estimateDates){ const e = estimateDates(rec); eta = e.eta; }
+  if (!eta) return '';
+  const d = daysBetween(todayISO(), eta);
+  if (d === 0) return 'today';
+  if (d > 0) return d + ' day' + (d===1?'':'s') + ' away';
+  return -d + ' day' + (-d===1?'':'s') + ' overdue';
+}
+
+function fmtDate(iso){
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+}
+function fmtAmt(v){
+  if (v == null || v === '') return '—';
+  return '$' + Number(v).toLocaleString('en-US', {maximumFractionDigits:2});
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------------- Excel import ---------------- */
+/* Column-header aliases: many variants seen in the sheets. */
+const COL_MAP = {
+  vendor:       ['vendor','supplier'],
+  invoice:      ['inv. #','inv #','inv#','inv','invoice','invoice #','invoice#','inv no','inv. no','invoice no','invoice number'],
+  commodity:    ['commodities','commodity','description','item'],
+  customer:     ['customer','client','consignee'],
+  container:    ['container #','container','container no','container number','contrno'],
+  exFactory:    ['ex. fact','ex fact','ex-factory','ex factory','reached fact'],
+  vesselPlan:   ['vessel plan','planned vessel'],
+  actualETD:    ['actual etd','etd','vessel etd'],
+  eta:          ['eta','vessel eta'],
+  amtUSD:       ['amt usd','amount','amount usd','invoice value','value','freight paid'],
+  comments:     ['comments','remarks','notes','status'],
+  terminal:     ['terminal','port terminal','port'],
+  shippingLine: ['shipping line','line','carrier'],
+  isf:          ['isf','isf number','transaction number'],
+  billNumber:   ['bill number','bill','bill no'],
+  hbl:          ['hbl #','hbl','hbl no','house bl'],
+  masterBL:     ['master bl #','master bl','mbl','master bill','mawb'],
+  freightCost:  ['freight cost','freight'],
+};
+function _norm(s){ return String(s==null?'':s).toLowerCase().replace(/\s+/g,' ').trim(); }
+
+/* Build index-by-column from a header row. */
+function _squash(s){ return String(s==null?'':s).toLowerCase().replace(/[^a-z0-9]/g,''); }
+function mapHeaders(headerRow){
+  const h = headerRow.map(_norm), hs = headerRow.map(_squash);
+  const idx = {};
+  for (const [field, cands] of Object.entries(COL_MAP)){
+    let hit = -1;
+    for (const c of cands){ const i = h.indexOf(c); if (i >= 0){ hit = i; break; } }
+    // second pass ignores spaces and punctuation: "INV#", "Inv. #", "inv - no" all match
+    if (hit < 0){
+      for (const c of cands){ const i = hs.indexOf(_squash(c)); if (i >= 0){ hit = i; break; } }
+    }
+    if (hit >= 0) idx[field] = hit;
+  }
+  return idx;
+}
+
+/* Find the header row in a sheet. */
+function findHeaderRow(rows){
+  for (let i = 0; i < Math.min(rows.length, 12); i++){
+    const row = rows[i] || [];
+    const h = row.map(_norm);
+    /* header must contain "container #" (or the container alias) and eta */
+    const hasCont = COL_MAP.container.some(c => h.includes(c));
+    const hasEta  = COL_MAP.eta.some(c => h.includes(c));
+    if (hasCont && hasEta) return i;
+  }
+  return -1;
+}
+
+/* Cell → string helper for cells that might be a Date or number. */
+function cellStr(v){
+  if (v == null) return '';
+  if (v instanceof Date) return v.toISOString().slice(0,10);
+  return String(v);
+}
+
+/* Parse a sheet's rows into container records. Sheets whose name matches
+   "received" (case-insensitive) are auto-marked as delivered — everything
+   in that sheet is history, already arrived, per the user's convention. */
+function parseSheet(rows, sheetName){
+  const hi = findHeaderRow(rows);
+  if (hi < 0) return { records:[], skipped:0, autoDelivered:false };
+  const idx = mapHeaders(rows[hi]);
+  if (idx.container == null) return { records:[], skipped:0, autoDelivered:false };
+  const autoDelivered = /received|delivered|arrived|history|completed/i.test(String(sheetName || ''));
+  const records = [];
+  let currentVendor = '';
+  let skipped = 0;
+  for (let r = hi + 1; r < rows.length; r++){
+    const row = rows[r] || [];
+    /* Detect vendor section headers (like "M/S HOME CREATION"): a row whose
+       first non-empty cell contains "M/S " and whose container column is empty. */
+    const contRaw = row[idx.container];
+    const contNorm = normContainer(contRaw);
+    if (!contNorm || !/^[A-Z]{4}\d{6,7}$/.test(contNorm)){
+      /* Might be a vendor section header. Check each cell separately for
+         "M/S XYZ" pattern — take everything after M/S up to a common
+         separator, whichever cell it lives in. */
+      for (let ci = 0; ci < row.length; ci++){
+        const cs = cellStr(row[ci]).trim();
+        const vm = /^M\/S\s+(.+)$/i.exec(cs);
+        if (vm){
+          let v = vm[1].trim()
+            .replace(/\s+F\.O\.B\s+SHIPMENT.*$/i, '')
+            .replace(/\s+FREIGHT.*$/i, '')
+            .replace(/\s+CLUB(BING|BED)?\s+SHIPMENT.*$/i, '')
+            .replace(/\s*\(.*$/, '')                     /* drop everything from '(' onward */
+            .replace(/[,.]?\s*$/, '')                    /* strip trailing punctuation */
+            .replace(/\s+/g, ' ')
+            .trim();
+          if (v) currentVendor = v;
+          break;
+        }
+      }
+      skipped++;
+      continue;
+    }
+    /* Extract per-column values. */
+    function get(field){
+      const i = idx[field];
+      return (i == null) ? '' : row[i];
+    }
+    const vendor = String(get('vendor') || '').trim() || currentVendor;
+    const eta = parseDate(get('eta'));
+    const rec = {
+      id: contNorm,
+      container: contNorm,
+      vendor: vendor || '',
+      invoice: String(get('invoice') || '').trim(),
+      commodity: String(get('commodity') || '').trim(),
+      customer: String(get('customer') || '').trim(),
+      exFactory: parseDate(get('exFactory')),
+      vesselPlan: parseDate(get('vesselPlan')),
+      actualETD: parseDate(get('actualETD')),
+      eta: eta,
+      amtUSD: parseAmt(get('amtUSD')),
+      comments: String(get('comments') || '').trim(),
+      terminal: String(get('terminal') || '').trim(),
+      shippingLine: String(get('shippingLine') || '').trim(),
+      isf: String(get('isf') || '').replace(/^Transaction Number:\s*/i,'').trim(),
+      billNumber: String(get('billNumber') || '').replace(/^Bill Number:\s*/i,'').trim(),
+      hbl: String(get('hbl') || '').trim(),
+      masterBL: String(get('masterBL') || '').trim(),
+      freightCost: parseAmt(get('freightCost')),
+      source: sheetName || '',
+      imported: Date.now(),
+      deliveredManual: autoDelivered || undefined       /* history sheets = arrived */
+    };
+    records.push(rec);
+  }
+  return { records, skipped, autoDelivered };
+}
+
+/* Lazy-load SheetJS from CDN. Cached after first success. */
+let _xlsxLoaded = null;
+function loadSheetJS(){
+  if (_xlsxLoaded) return _xlsxLoaded;
+  _xlsxLoaded = new Promise((res, rej) => {
+    if (typeof XLSX !== 'undefined') return res(XLSX);
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = () => res(window.XLSX);
+    s.onerror = () => rej(new Error('Could not load Excel reader from CDN. Please check your internet connection and try again.'));
+    document.head.appendChild(s);
+  });
+  return _xlsxLoaded;
+}
+
+/* Parse an .xlsx File → {sheetName: [[...], [...]]}.
+   raw:true so date cells arrive as JS Date objects (not formatted strings
+   that would strip the year when the cell uses a format like 'd-mmm'). */
+async function readWorkbook(file){
+  const XLSX = await loadSheetJS();
+  const buf = await file.arrayBuffer();
+  const wb = XLSX.read(buf, {type:'array', cellDates:true});
+  const out = {};
+  wb.SheetNames.forEach(n => {
+    out[n] = XLSX.utils.sheet_to_json(wb.Sheets[n], {header:1, defval:null, raw:true});
+  });
+  return out;
+}
+
+/* Merge imported records into CONTAINERS. Returns {added, updated}. */
+function mergeImport(records){
+  const byId = {};
+  CONTAINERS.forEach(c => { byId[c.id] = c; });
+  let added = 0, updated = 0;
+  records.forEach(rec => {
+    if (byId[rec.id]){
+      /* Update: keep existing values that the import left blank, so partial
+         imports don't wipe fields. Explicitly non-null wins. */
+      const cur = byId[rec.id];
+      for (const k in rec){
+        const v = rec[k];
+        if (v === '' || v == null) continue;
+        /* deliveredManual is sticky — once true, never overwrite back to false */
+        if (k === 'deliveredManual' && cur.deliveredManual === true && v !== true) continue;
+        cur[k] = v;
+      }
+      cur.imported = Date.now();
+      updated++;
+    } else {
+      byId[rec.id] = rec;
+      CONTAINERS.push(rec);
+      added++;
+    }
+  });
+  return { added, updated };
+}
+
+/* ---------------- rendering ---------------- */
+function updateOptions(sel, values){
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">All</option>' + values.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  if (values.includes(cur)) sel.value = cur;
+}
+function distinct(field){
+  const s = new Set();
+  CONTAINERS.forEach(c => { const v = (c[field]||'').trim(); if (v) s.add(v); });
+  return Array.from(s).sort((a,b) => a.localeCompare(b));
+}
+
+function filtered(){
+  const today = todayISO();
+  const q = UI.search.trim().toLowerCase();
+  return CONTAINERS.filter(c => {
+    const st = computeStatus(c, today);
+    /* A container with no ETA gets 'unknown', and no card asks for that status -
+       so those rows disappeared from every view except All. Treat them as in
+       transit, which is what they are: shipped, date not yet known. */
+    if (UI.statusFilter === 'intransit'){ if (st !== 'pending' && st !== 'alert' && st !== 'unknown') return false; }
+    else if (UI.statusFilter !== 'all' && st !== UI.statusFilter) return false;
+    /* Hide delivered/received by default so the active view isn't drowned
+       out by history. Clicking the Delivered KPI card (statusFilter set)
+       or ticking "Show received / delivered" reveals them. */
+    if (UI.statusFilter === 'all' && !UI.showReceived && st === 'delivered') return false;
+    if (UI.line && c.shippingLine !== UI.line) return false;
+    if (UI.vendor && c.vendor !== UI.vendor) return false;
+    if (UI.customer && c.customer !== UI.customer) return false;
+    if (q){
+      const hay = [c.container, c.vendor, c.invoice, c.commodity, c.customer, c.shippingLine, c.comments, c.terminal, c.hbl, c.masterBL, c.billNumber].join(' ').toLowerCase();
+      if (hay.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+}
+function sorted(rows){
+  const dir = UI.sortDir;
+  const k = UI.sort;
+  return rows.slice().sort((a,b) => {
+    const va = a[k], vb = b[k];
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1;
+    if (vb == null) return -1;
+    if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * dir;
+    return String(va).localeCompare(String(vb)) * dir;
+  });
+}
+
+function renderKpis(){
+  const today = todayISO();
+  const counts = { all: CONTAINERS.length, alert:0, overdue:0, pending:0, delivered:0, unknown:0 };
+  CONTAINERS.forEach(c => { counts[computeStatus(c, today)]++; });
+  $('#kpiAlert').textContent = counts.alert;
+  // Of those arriving soon, how many already have a printable packing slip on file
+  (function(){
+    const sub = $('#kpiAlertSub'); if (!sub) return;
+    if (!counts.alert){ sub.textContent = 'arriving soon'; sub.removeAttribute('title'); return; }
+    let withSlip = 0;
+    CONTAINERS.forEach(c => {
+      if (computeStatus(c, today) !== 'alert') return;
+      const f = c.printSlip;
+      if (f && f.key) withSlip++;
+    });
+    const missing = counts.alert - withSlip;
+    sub.innerHTML = 'arriving soon<br><span class="kpi-slip' + (missing ? ' warn' : ' ok') + '">'
+      + withSlip + ' of ' + counts.alert + ' packing slips ready</span>';
+    sub.title = missing
+      ? (missing + ' arriving container' + (missing !== 1 ? 's have' : ' has') + ' no printable packing slip attached yet')
+      : 'Every arriving container has its printable packing slip';
+  })();
+  $('#kpiOverdue').textContent = counts.overdue;
+  // Count what the card shows when clicked: anything still on the water,
+  // including containers whose ETA is not known yet.
+  $('#kpiPending').textContent = counts.pending + counts.alert + counts.unknown;   // everything still on the water
+  $('#kpiDelivered').textContent = counts.delivered;
+  $('#kpiTotal').textContent = counts.all;
+  const visibleCount = filtered().length;
+  const hidden = counts.all - visibleCount;
+  $('#totalCount').textContent = (hidden > 0 && !UI.showReceived && UI.statusFilter === 'all')
+    ? `${visibleCount} shown · ${hidden} received hidden`
+    : counts.all + ' container' + (counts.all === 1 ? '' : 's');
+  $$('.kpi').forEach(k => k.classList.toggle('active', k.getAttribute('data-status') === UI.statusFilter));
+
+  /* Alert banner: list next-arriving alerts + overdue. */
+  const bnr = $('#alertBanner');
+  if (counts.alert === 0 && counts.overdue === 0){ bnr.innerHTML = ''; return; }
+  const alertList = CONTAINERS.filter(c => computeStatus(c, today) === 'alert')
+    .sort((a,b) => a.eta.localeCompare(b.eta)).slice(0, 6);
+  const overdueList = CONTAINERS.filter(c => computeStatus(c, today) === 'overdue')
+    .sort((a,b) => b.eta.localeCompare(a.eta)).slice(0, 6);
+  let html = '';
+  if (counts.alert){
+    html += '<div class="alert-banner"><div class="icon">🔔</div><div style="flex:1;min-width:200px;"><div class="headline">' + counts.alert + ' container' + (counts.alert===1?'':'s') + ' arriving in the next ' + SETTINGS.alertDays + ' days</div><div class="detail">Click any to review details.</div></div><ul>' +
+      alertList.map(c => `<li data-id="${esc(c.id)}"><b>${esc(c.container)}</b> · ${fmtDate(c.eta)} · ${daysLabel(c)}</li>`).join('') + '</ul></div>';
+  }
+  if (counts.overdue){
+    html += '<div class="alert-banner overdue"><div class="icon">⚠︎</div><div style="flex:1;min-width:200px;"><div class="headline">' + counts.overdue + ' container' + (counts.overdue===1?'':'s') + ' overdue</div><div class="detail">ETA has passed but no delivery signal in the record.</div></div><ul>' +
+      overdueList.map(c => `<li data-id="${esc(c.id)}"><b>${esc(c.container)}</b> · ${fmtDate(c.eta)} · ${daysLabel(c)}</li>`).join('') + '</ul></div>';
+  }
+  bnr.innerHTML = html;
+  bnr.querySelectorAll('li[data-id]').forEach(li => li.addEventListener('click', () => openEditor(li.getAttribute('data-id'))));
+
+  /* What the tab badge should say: how many of the containers arriving soon
+     already have a packing slip on file. Overdue containers are a different
+     problem and were only inflating the number. */
+  try {
+    let soon = 0, ready = 0;
+    CONTAINERS.forEach(c => {
+      if (computeStatus(c, today) !== 'alert') return;
+      soon++;
+      const f = c.printSlip;
+      if (f && f.key) ready++;
+    });
+    // The window itself is worth stating - "2/3-10" reads as two of three ready,
+    // for containers arriving within ten days.
+    const win = SETTINGS.alertDays;
+    parent.postMessage({ type:'hw-alert', tab:'containers',
+                         count: soon, ready: ready, days: win,
+                         label: soon ? (ready + '/' + soon + '-' + win) : '' }, '*');
+  } catch(e){}
+}
+
+const COL_DEFS = [
+  { k:'container',    label:'Container #', w:'130px', render:c => `<td class="ct-cont">${esc(c.container)}</td>` },
+  { k:'vendor',       label:'Vendor',      w:'150px', render:c => `<td>${esc(c.vendor||'—')}</td>` },
+  { k:'commodity',    label:'Commodity',   w:'240px', render:c => `<td>${esc(c.commodity||'—')}</td>` },
+  { k:'customer',     label:'Customer',    w:'110px', render:c => `<td>${esc(c.customer||'—')}</td>` },
+  { k:'shippingLine', label:'Line',        w:'110px', render:c => `<td>${esc(c.shippingLine||'—')}</td>` },
+  { k:'exFactory',    label:'Ex-Factory',  w:'110px', render:c => `<td>${fmtDate(c.exFactory)}</td>` },
+  { k:'actualETD',    label:'ETD',         w:'110px', render:c => `<td>${estDateCell(c,'etd')}</td>` },
+  { k:'eta',          label:'ETA',         w:'150px', render:(c, st) => { const etaCls = st === 'alert' || st === 'overdue' || st === 'delivered' ? st : ''; return `<td class="ct-eta ${etaCls}">${estDateCell(c,'eta')}<small>${esc(daysLabel(c))}</small></td>`; } },
+  { k:'status',       label:'Status',      w:'90px',  render:(c, st) => `<td><span class="status-badge ${st}">${st}</span></td>` },
+  { k:'amtUSD',       label:'Value',       w:'100px', render:c => `<td>${fmtAmt(c.amtUSD)}</td>` },
+  { k:'vendorSlip',   label:'Vendor packing slip',    w:'170px', render:c => slipCell(c,'vendorSlip') },
+  { k:'printSlip',    label:'Printable packing slip', w:'180px', render:c => slipCell(c,'printSlip') },
+  /* off by default - tick them in Settings */
+  { k:'invoice',      label:'Invoice #',   w:'140px', hid:true, render:c => `<td>${esc(c.invoice||'—')}</td>` },
+  { k:'vesselPlan',   label:'Vessel plan', w:'110px', hid:true, render:c => `<td>${fmtDate(c.vesselPlan)}</td>` },
+  { k:'terminal',     label:'Terminal',    w:'130px', hid:true, render:c => `<td>${esc(c.terminal||'—')}</td>` },
+  { k:'isf',          label:'ISF',         w:'110px', hid:true, render:c => `<td>${esc(c.isf||'—')}</td>` },
+  { k:'billNumber',   label:'Bill #',      w:'130px', hid:true, render:c => `<td>${esc(c.billNumber||'—')}</td>` },
+  { k:'hbl',          label:'HBL #',       w:'130px', hid:true, render:c => `<td>${esc(c.hbl||'—')}</td>` },
+  { k:'masterBL',     label:'Master BL #', w:'140px', hid:true, render:c => `<td>${esc(c.masterBL||'—')}</td>` },
+  { k:'freightCost',  label:'Freight cost',w:'110px', hid:true, render:c => `<td>${fmtAmt(c.freightCost)}</td>` },
+  { k:'comments',     label:'Comments',    w:'240px', hid:true, render:c => `<td>${esc(c.comments||'—')}</td>` },
+];
+function isColHidden(k){ return (SETTINGS.hiddenCols||[]).indexOf(k) >= 0; }
+function getVisibleCols(){
+  const v = getCols().filter(c => !isColHidden(c.k));
+  return v.length ? v : getCols().slice(0, 1);   // never leave the table with no columns
+}
+/* A column added in a later build starts hidden, so nobody's table suddenly
+   grows nine columns. Once seen, the user's own choice is what sticks. */
+function applyNewColDefaults(){
+  const known = Array.isArray(SETTINGS.knownCols) ? SETTINGS.knownCols.slice() : [];
+  let changed = false;
+  COL_DEFS.forEach(c => {
+    if (known.indexOf(c.k) >= 0) return;
+    known.push(c.k); changed = true;
+    /* Every column shows by default now. A column that arrives hidden is a
+       column nobody knows exists, and after a restore it left the table
+       looking empty. Hide what you do not want from the Columns menu. */
+  });
+  if (changed) SETTINGS.knownCols = known;
+  return changed;
+}
+function getCols(){
+  const order = SETTINGS.columnOrder;
+  if (!order || !order.length) return COL_DEFS.slice();
+  const byKey = {}; COL_DEFS.forEach(c => byKey[c.k] = c);
+  const result = [];
+  order.forEach(k => { if (byKey[k]){ result.push(byKey[k]); delete byKey[k]; } });
+  COL_DEFS.forEach(c => { if (byKey[c.k]) result.push(c); });   /* new cols appended */
+  return result;
+}
+function reorderColumn(fromKey, toKey, placeAfter){
+  const cur = getCols().map(c => c.k);
+  const fromIdx = cur.indexOf(fromKey);
+  if (fromIdx < 0) return;
+  cur.splice(fromIdx, 1);
+  let toIdx = cur.indexOf(toKey);
+  if (toIdx < 0) toIdx = cur.length;
+  if (placeAfter) toIdx++;
+  cur.splice(toIdx, 0, fromKey);
+  SETTINGS.columnOrder = cur;
+  saveSettings().then(() => { renderTable(); refreshSetColList(); });
+}
+
+/* ---------------- packing-slip attachments ----------------
+   The file bytes live under their own IndexedDB key so the container list
+   itself stays small; the record only keeps name/type/size and that key. */
+const SLIP_FIELDS = { vendorSlip:'Vendor packing slip', printSlip:'Printable packing slip' };
+const SLIP_MAX = 8 * 1024 * 1024;
+const SLIP_ACCEPT = '.pdf,.jpg,.jpeg,.png,.webp,.gif,.heic';
+
+function slipKey(){ return 'slip_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
+function slipSize(n){
+  if (!n && n !== 0) return '';
+  return n < 1024 ? n + ' B' : (n < 1048576 ? (n/1024).toFixed(0) + ' KB' : (n/1048576).toFixed(1) + ' MB');
+}
+function slipCell(c, field){
+  const f = c[field];
+  if (!f || !f.key){
+    return '<td class="slip-td"><button class="slip-btn add" data-slip-add="' + field + '" data-id="' + esc(c.id) + '" title="Attach a file">\u2912 Upload</button></td>';
+  }
+  return '<td class="slip-td"><span class="slip-file" title="' + esc(f.name||'') + ' \u00b7 ' + slipSize(f.size) + '">'
+    + '<button class="slip-btn open" data-slip-open="' + field + '" data-id="' + esc(c.id) + '">\ud83d\udcce ' + esc(f.name||'file') + '</button>'
+    + '<button class="slip-btn del" data-slip-del="' + field + '" data-id="' + esc(c.id) + '" title="Remove">\u2715</button></span></td>';
+}
+async function slipAttach(id, field, file){
+  if (!file) return;
+  if (file.size > SLIP_MAX){ alert('That file is ' + slipSize(file.size) + '. Please keep attachments under ' + slipSize(SLIP_MAX) + '.'); return; }
+  const rec = CONTAINERS.find(c => c.id === id);
+  if (!rec) return;
+  const data = await new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = () => rej(r.error);
+    r.readAsDataURL(file);
+  }).catch(() => null);
+  if (!data){ alert('Could not read that file.'); return; }
+  if (rec[field] && rec[field].key){ try { await idbDel(rec[field].key); } catch(e){} }
+  const key = slipKey();
+  try { await idbPut(key, data); }
+  catch(e){ alert('Could not save the attachment - the browser storage may be full.'); return; }
+  rec[field] = { key:key, name:file.name, type:file.type||'', size:file.size, at:Date.now() };
+  await save();
+  renderTable();
+  if ($('#editMdl').classList.contains('open')) renderEditorSlips();
+}
+async function slipOpen(id, field){
+  const rec = CONTAINERS.find(c => c.id === id);
+  const f = rec && rec[field];
+  if (!f || !f.key) return;
+  let data = null;
+  try { data = await idbGet(f.key); } catch(e){}
+  if (!data){ alert('That attachment is missing from this browser. Re-upload it, or restore from a backup.'); return; }
+  const a = document.createElement('a');
+  a.href = data; a.download = f.name || 'packing-slip';
+  a.target = '_blank'; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+/* Native confirm()/alert() are swallowed inside the workspace frame - the call
+   returns false and the handler quietly gives up, which is why deleting a
+   packing slip appeared to do nothing. Use an in-page dialog instead. */
+function uiAsk(message, opts){
+  opts = opts || {};
+  return new Promise(resolve => {
+    let ov = document.getElementById('uiAskOv');
+    if (!ov){
+      ov = document.createElement('div');
+      ov.id = 'uiAskOv'; ov.className = 'ui-ask-ov';
+      ov.innerHTML = '<div class="ui-ask"><div class="ui-ask-msg" id="uiAskMsg"></div>'
+        + '<div class="ui-ask-btns"><button class="btn" id="uiAskNo">Cancel</button>'
+        + '<button class="btn primary" id="uiAskYes">Confirm</button></div></div>';
+      document.body.appendChild(ov);
+    }
+    const msg = ov.querySelector('#uiAskMsg');
+    const yes = ov.querySelector('#uiAskYes');
+    const no  = ov.querySelector('#uiAskNo');
+    msg.textContent = message;
+    yes.textContent = opts.yes || 'Confirm';
+    no.textContent  = opts.no  || 'Cancel';
+    no.style.display = opts.no === '' ? 'none' : '';
+    yes.className = 'btn primary' + (opts.danger ? ' danger' : '');
+    ov.style.display = 'flex';
+    const done = v => { ov.style.display='none'; yes.onclick=null; no.onclick=null; ov.onclick=null; resolve(v); };
+    yes.onclick = () => done(true);
+    no.onclick  = () => done(false);
+    ov.onclick  = e => { if (e.target === ov) done(false); };
+  });
+}
+function uiSay(message){ return uiAsk(message, { yes:'OK', no:'' }); }
+
+/* Deleting a packing slip destroys the only copy of a document, so it asks for
+   a PIN first. Set once, kept in this browser, changeable from Settings. */
+const SLIP_PIN_KEY = 'hw_slip_pin';
+/* There is always a PIN - 0000 until someone changes it - so deleting a slip
+   is always a deliberate act rather than a single stray click. */
+function slipPinSet(){ return true; }
+function slipPinCustom(){ try { return !!localStorage.getItem(SLIP_PIN_KEY); } catch(e){ return false; } }
+const SLIP_PIN_DEFAULT = '0000';
+const SLIP_PIN_SHOW_KEY = 'hw_slip_pin_show';
+/* Shown by default, so nobody is locked out of a workspace they just opened. */
+function slipPinShown(){ try { return localStorage.getItem(SLIP_PIN_SHOW_KEY) !== '0'; } catch(e){ return true; } }
+function slipPinShowSet(v){ try { localStorage.setItem(SLIP_PIN_SHOW_KEY, v ? '1' : '0'); } catch(e){} }
+function slipPinGet(){
+  try { return localStorage.getItem(SLIP_PIN_KEY) || SLIP_PIN_DEFAULT; } catch(e){ return SLIP_PIN_DEFAULT; }
+}
+function slipPinSave(v){ try { localStorage.setItem(SLIP_PIN_KEY, String(v)); } catch(e){} }
+function slipPinClear(){ try { localStorage.removeItem(SLIP_PIN_KEY); } catch(e){} }
+
+function askSlipPin(message){
+  return new Promise(resolve => {
+    const first = false;
+    let ov = document.getElementById('pinOv');
+    if (!ov){
+      ov = document.createElement('div');
+      ov.id = 'pinOv'; ov.className = 'ui-ask-ov';
+      ov.innerHTML = '<div class="ui-ask" style="max-width:380px">'
+        + '<div class="ui-ask-msg" id="pinMsg"></div>'
+        + '<input id="pinInput" type="password" inputmode="numeric" autocomplete="off" '
+        +   'style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;'
+        +   'font-size:16px;letter-spacing:.3em;text-align:center;margin-bottom:4px">'
+        + '<div id="pinHint" style="font-size:11.5px;color:var(--mut);margin-bottom:2px"></div>'
+        + '<div id="pinErr" style="min-height:16px;font-size:11.5px;color:#B3261E;font-weight:600"></div>'
+        + '<div class="ui-ask-btns">'
+        +   '<button class="btn" id="pinCancel">Cancel</button>'
+        +   '<button class="btn primary danger" id="pinOk">Confirm</button>'
+        + '</div></div>';
+      document.body.appendChild(ov);
+    }
+    const msg = ov.querySelector('#pinMsg');
+    const inp = ov.querySelector('#pinInput');
+    const err = ov.querySelector('#pinErr');
+    const ok  = ov.querySelector('#pinOk');
+    const no  = ov.querySelector('#pinCancel');
+
+    msg.textContent = first
+      ? 'Set a PIN to protect packing slips. You will need it to delete one.'
+      : message;
+    ok.textContent = first ? 'Set PIN' : 'Delete';
+    inp.value = ''; err.textContent = '';
+    inp.type = 'password';
+    // Whether the code itself is printed here is a setting - useful while people
+    // are getting used to it, off once it should actually stop someone.
+    const hint = ov.querySelector('#pinHint');
+    if (hint) hint.innerHTML = slipPinShown() ? ('PIN: <b>' + slipPinGet() + '</b>') : '';
+    ov.style.display = 'flex';
+    setTimeout(() => inp.focus(), 30);
+
+    const done = v => { ov.style.display='none'; ok.onclick=null; no.onclick=null;
+                        ov.onclick=null; inp.onkeydown=null; resolve(v); };
+    const submit = () => {
+      const v = inp.value.trim();
+      if (first){
+        if (v.length < 4){ err.textContent = 'Use at least four digits.'; return; }
+        slipPinSave(v); done(true); return;
+      }
+      if (v !== slipPinGet()){ err.textContent = 'That PIN is not right.'; inp.value=''; inp.focus(); return; }
+      done(true);
+    };
+    ok.onclick = submit;
+    no.onclick = () => done(false);
+    ov.onclick = e => { if (e.target === ov) done(false); };
+    inp.onkeydown = e => { if (e.key === 'Enter') submit(); };
+  });
+}
+
+/* Type a new PIN, reusing the same dialog. Returns the saved value, or null. */
+function askNewSlipPin(){
+  return new Promise(resolve => {
+    const ov = document.getElementById('pinOv');
+    if (!ov) return resolve(null);
+    const msg = ov.querySelector('#pinMsg');
+    const inp = ov.querySelector('#pinInput');
+    const err = ov.querySelector('#pinErr');
+    const ok  = ov.querySelector('#pinOk');
+    const no  = ov.querySelector('#pinCancel');
+    const hint= ov.querySelector('#pinHint');
+    msg.textContent = 'New PIN for deleting packing slips \u2014 at least four digits.';
+    if (hint) hint.textContent = '';
+    ok.textContent = 'Save PIN';
+    inp.type = 'text'; inp.value = slipPinGet(); err.textContent = '';
+    ov.style.display = 'flex';
+    setTimeout(() => { inp.focus(); inp.select(); }, 30);
+    const done = v => { ov.style.display='none'; ok.onclick=null; no.onclick=null;
+                        ov.onclick=null; inp.onkeydown=null; resolve(v); };
+    const submit = () => {
+      const t = inp.value.trim();
+      if (t.length < 4){ err.textContent = 'Use at least four digits.'; return; }
+      slipPinSave(t); done(t);
+    };
+    ok.onclick = submit;
+    no.onclick = () => done(null);
+    ov.onclick = e => { if (e.target === ov) done(null); };
+    inp.onkeydown = e => { if (e.key === 'Enter') submit(); };
+  });
+}
+
+/* Changing the PIN needs the current one, so someone at an unlocked screen
+   cannot simply replace it. */
+async function manageSlipPin(){
+  if (!await askSlipPin('Enter the current PIN to change it.')) return;
+  const t = await askNewSlipPin();
+  if (t === null) return;
+  const show = await uiAsk('Print the PIN in the delete prompt? Showing it makes the step a '
+    + 'deliberate confirmation; hiding it means only people who know the code can delete a slip.',
+    { yes:'Show the PIN', no:'Keep it hidden' });
+  slipPinShowSet(show);
+  await uiSay('PIN saved.');
+}
+
+async function slipRemove(id, field){
+  const rec = CONTAINERS.find(c => c.id === id);
+  const f = rec && rec[field];
+  if (!f) return;
+  if (!await askSlipPin('Enter the PIN to delete "' + (f.name || 'this file')
+        + '" from ' + (rec.container || 'this container') + '. This cannot be undone.')) return;
+  if (f.key){ try { await idbDel(f.key); } catch(e){} }
+  rec[field] = null;
+  await save();
+  renderTable();
+  if ($('#editMdl').classList.contains('open')) renderEditorSlips();
+}
+function slipPurge(rec){
+  if (!rec) return;
+  Object.keys(SLIP_FIELDS).forEach(k => { const f = rec[k]; if (f && f.key){ try { idbDel(f.key); } catch(e){} } });
+}
+
+function renderTable(){
+  try { return renderTableInner(); }
+  catch(err){
+    /* A throw in here used to leave the page blank with nothing in the UI to
+       explain it - the cards above still showed their counts, so it read as
+       missing data rather than a broken render. */
+    console.error('containers render failed:', err);
+    const w = $('#tableWrap');
+    if (w) w.innerHTML = '<div class="empty"><h3>The table could not be drawn</h3>'
+      + '<p>' + String(err && err.message || err).replace(/</g,'&lt;') + '</p>'
+      + '<p style="font-size:12px;color:#5B6472">'
+      + CONTAINERS.length + ' containers are loaded, so the data is here.</p>'
+      + '<button class="tbtn" id="colsRescue2">Reset view and columns</button></div>';
+    const rb = document.getElementById('colsRescue2');
+    if (rb) rb.addEventListener('click', () => {
+      SETTINGS.hiddenCols = []; SETTINGS.columnOrder = null;
+      UI.statusFilter = 'all'; UI.showReceived = true;
+      UI.line = ''; UI.vendor = ''; UI.customer = ''; UI.search = '';
+      saveSettings().then(renderAll);
+    });
+  }
+}
+function renderTableInner(){
+  let rows = sorted(filtered());
+  /* Containers are loaded but the current view has nothing in it - a saved
+     filter, or delivered ones hidden, or a status with no members. Showing an
+     empty table while the cards above report numbers reads as lost data, so
+     widen the view once and say what was done. */
+  if (!rows.length && CONTAINERS.length && !UI._widened){
+    UI._widened = true;
+    UI.statusFilter = 'all';
+    UI.showReceived = true;
+    UI.line = ''; UI.vendor = ''; UI.customer = ''; UI.search = '';
+    rows = sorted(filtered());
+    if (rows.length){
+      setTimeout(() => {
+        const b = $('#tableWrap');
+        if (b && !document.getElementById('autoWidened')){
+          const n = document.createElement('div');
+          n.id = 'autoWidened';
+          n.style.cssText = 'margin:0 0 10px;padding:8px 12px;border-radius:9px;background:#FFF6D6;'
+            + 'border:1px solid #E8D07A;color:#8A5A00;font-size:12px;font-weight:600;';
+          n.textContent = 'Your saved filters matched nothing, so every container is shown.';
+          b.parentNode.insertBefore(n, b);
+        }
+      }, 0);
+    }
+  }
+  const wrap = $('#tableWrap');
+  if (!CONTAINERS.length){
+    wrap.innerHTML = `<div class="empty"><h3>📥 No containers yet</h3><p>Import your <b>Container Details</b> Excel to load your records. Two-sheet workbooks (Container Details + Received) are supported — the tracker matches your existing column names and merges by container number.</p><button class="tbtn" onclick="document.getElementById('importBtn').click()">📥 Import Excel now</button></div>`;
+    return;
+  }
+  if (!rows.length){
+    /* Name the filters that are hiding things. "No matches" alone leaves you
+       guessing which of five controls is responsible. */
+    const active = [];
+    if (UI.statusFilter && UI.statusFilter !== 'all') active.push('status: ' + UI.statusFilter);
+    if (UI.line) active.push('line: ' + UI.line);
+    if (UI.vendor) active.push('vendor: ' + UI.vendor);
+    if (UI.search) active.push('search: "' + UI.search + '"');
+    if (!UI.showReceived) active.push('delivered ones hidden');
+    wrap.innerHTML = `<div class="empty"><h3>No matches</h3>
+      <p>${CONTAINERS.length} container${CONTAINERS.length === 1 ? '' : 's'} loaded, but none match
+      ${active.length ? ('\u2014 ' + active.join(', ')) : 'the current filters'}.</p>
+      <button class="tbtn ghost" onclick="document.getElementById('clearFilters').click()">Reset filters</button></div>`;
+    return;
+  }
+  const today = todayISO();
+  const cols = getVisibleCols();
+  /* Rows to show but no columns to show them in - the table then renders as an
+     empty frame while the cards above still report the counts, which reads as
+     lost data. Say what happened and offer the way out. */
+  if (!cols.length){
+    wrap.innerHTML = `<div class="empty"><h3>No columns are visible</h3>
+      <p>${rows.length} container${rows.length === 1 ? ' is' : 's are'} loaded, but every column is hidden,
+      so there is nothing to draw. Restore the default columns to see them.</p>
+      <button class="tbtn" id="colsRescue">Show all columns</button></div>`;
+    const rb = document.getElementById('colsRescue');
+    if (rb) rb.addEventListener('click', () => {
+      SETTINGS.hiddenCols = [];
+      SETTINGS.columnOrder = null;
+      saveSettings().then(renderAll);
+    });
+    return;
+  }
+  let html = '<div class="tablewrap"><table class="ct"><thead><tr>';
+  html += cols.map(c => {
+    const cls = (UI.sort === c.k ? 'sorted ' + (UI.sortDir < 0 ? 'desc' : '') : '');
+    return `<th draggable="true" data-key="${c.k}" data-sort="${c.k}" class="${cls}" style="min-width:${c.w}" title="Click to sort — drag to reorder columns">${esc(c.label)}</th>`;
+  }).join('');
+  html += '</tr></thead><tbody>';
+  html += rows.map(c => {
+    const st = computeStatus(c, today);
+    return `<tr class="${st}" data-id="${esc(c.id)}">` + cols.map(col => col.render(c, st)).join('') + `</tr>`;
+  }).join('');
+  html += '</tbody></table></div>';
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('tbody tr').forEach(tr => tr.addEventListener('click', () => openEditor(tr.getAttribute('data-id'))));
+  wrap.querySelectorAll('[data-slip-add],[data-slip-open],[data-slip-del]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();                       // never open the editor from these
+      const id = b.getAttribute('data-id');
+      if (b.hasAttribute('data-slip-open')) return slipOpen(id, b.getAttribute('data-slip-open'));
+      if (b.hasAttribute('data-slip-del'))  return slipRemove(id, b.getAttribute('data-slip-del'));
+      const field = b.getAttribute('data-slip-add');
+      const inp = $('#slipFile');
+      if (!inp) return;
+      inp.value = '';
+      inp.setAttribute('accept', SLIP_ACCEPT);
+      inp.onchange = ev => { const f = ev.target.files && ev.target.files[0]; inp.onchange = null; slipAttach(id, field, f); };
+      inp.click();
+    });
+  });
+  /* Drag-to-reorder columns. A drag suppresses the click-to-sort by setting
+     a flag that click checks — otherwise both would fire on drop. */
+  let _thDragged = false;
+  wrap.querySelectorAll('thead th[draggable]').forEach(th => {
+    th.addEventListener('dragstart', e => {
+      _thDragged = true;
+      e.dataTransfer.setData('text/plain', th.getAttribute('data-key'));
+      e.dataTransfer.effectAllowed = 'move';
+      th.classList.add('drag-src');
+    });
+    th.addEventListener('dragend', () => {
+      th.classList.remove('drag-src');
+      wrap.querySelectorAll('thead th').forEach(x => x.classList.remove('drop-before','drop-after'));
+      /* let click handlers see the flag briefly, then reset */
+      setTimeout(() => { _thDragged = false; }, 50);
+    });
+    th.addEventListener('dragover', e => {
+      e.preventDefault();
+      const rect = th.getBoundingClientRect();
+      const after = (e.clientX - rect.left) > rect.width / 2;
+      wrap.querySelectorAll('thead th').forEach(x => x.classList.remove('drop-before','drop-after'));
+      th.classList.add(after ? 'drop-after' : 'drop-before');
+      e.dataTransfer.dropEffect = 'move';
+    });
+    th.addEventListener('dragleave', () => th.classList.remove('drop-before','drop-after'));
+    th.addEventListener('drop', e => {
+      e.preventDefault();
+      const from = e.dataTransfer.getData('text/plain');
+      const to = th.getAttribute('data-key');
+      const rect = th.getBoundingClientRect();
+      const placeAfter = (e.clientX - rect.left) > rect.width / 2;
+      th.classList.remove('drop-before','drop-after');
+      if (from && from !== to) reorderColumn(from, to, placeAfter);
+    });
+    th.addEventListener('click', () => {
+      if (_thDragged) return;                                   /* drag, not click */
+      const k = th.getAttribute('data-sort');
+      if (UI.sort === k) UI.sortDir = -UI.sortDir; else { UI.sort = k; UI.sortDir = 1; }
+      renderTable();
+    });
+  });
+}
+
+function renderAll(){
+  updateOptions($('#fLine'), distinct('shippingLine'));
+  updateOptions($('#fVendor'), distinct('vendor'));
+  updateOptions($('#fCustomer'), distinct('customer'));
+  renderKpis();
+  renderTable();
+}
+
+/* ---------------- edit modal ---------------- */
+let editingId = null;
+function renderEditorSlips(){
+  Object.keys(SLIP_FIELDS).forEach(field => {
+    const box = $('#ef-slip-' + field);
+    if (!box) return;
+    if (editingId === '__new__'){
+      box.innerHTML = '<span class="slip-hint">Save the container first, then attach a file.</span>';
+      return;
+    }
+    const rec = CONTAINERS.find(c => c.id === editingId);
+    const f = rec && rec[field];
+    box.innerHTML = (!f || !f.key)
+      ? '<button type="button" class="slip-btn add" data-slip-add="' + field + '" data-id="' + esc(editingId) + '">\u2912 Upload</button>'
+      : '<span class="slip-file">'
+        + '<button type="button" class="slip-btn open" data-slip-open="' + field + '" data-id="' + esc(editingId) + '">\ud83d\udcce ' + esc(f.name||'file') + '</button>'
+        + '<button type="button" class="slip-btn del" data-slip-del="' + field + '" data-id="' + esc(editingId) + '" title="Remove">\u2715</button>'
+        + '<span class="slip-hint">' + slipSize(f.size) + '</span></span>';
+    box.querySelectorAll('[data-slip-add],[data-slip-open],[data-slip-del]').forEach(b => {
+      b.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        const id = b.getAttribute('data-id');
+        if (b.hasAttribute('data-slip-open')) return slipOpen(id, b.getAttribute('data-slip-open'));
+        if (b.hasAttribute('data-slip-del'))  return slipRemove(id, b.getAttribute('data-slip-del'));
+        const fld = b.getAttribute('data-slip-add');
+        const inp = $('#slipFile');
+        if (!inp) return;
+        inp.value = '';
+        inp.setAttribute('accept', SLIP_ACCEPT);
+        inp.onchange = ev => { const file = ev.target.files && ev.target.files[0]; inp.onchange = null; slipAttach(id, fld, file); };
+        inp.click();
+      });
+    });
+  });
+}
+function openEditor(id){
+  const rec = id === '__new__' ? { id:'', container:'', vendor:'', invoice:'', commodity:'', customer:'', exFactory:null, vesselPlan:null, actualETD:null, eta:null, amtUSD:null, comments:'', terminal:'', shippingLine:'', isf:'', billNumber:'', hbl:'', masterBL:'', freightCost:null, source:'manual', imported:Date.now() } : CONTAINERS.find(c => c.id === id);
+  if (!rec) return;
+  editingId = id;
+  $('#editTitle').textContent = id === '__new__' ? 'New container' : ('Container ' + rec.container);
+  $('#editSub').textContent = id === '__new__' ? 'Fill in the fields and click Save.' : ('Source: ' + (rec.source||'—') + ' · Imported: ' + (rec.imported ? new Date(rec.imported).toLocaleString() : '—'));
+  ['container','vendor','invoice','commodity','customer','shippingLine','exFactory','vesselPlan','actualETD','eta','amtUSD','comments','terminal','isf','billNumber','hbl','masterBL','freightCost'].forEach(f => {
+    const el = $('#ef-' + f);
+    el.value = rec[f] == null ? '' : rec[f];
+  });
+  $('#ef-delivered').checked = rec.deliveredManual === true || isDelivered(rec);
+  renderEditorSlips();
+  $('#editDelBtn').style.display = id === '__new__' ? 'none' : '';
+  $('#editMdl').classList.add('open');
+}
+function closeEditor(){ $('#editMdl').classList.remove('open'); editingId = null; }
+function saveEditor(){
+  const contInput = $('#ef-container').value.trim();
+  if (!contInput){ alert('Container number is required.'); return; }
+  const contId = normContainer(contInput);
+  const rec = {
+    id: contId,
+    container: contId,
+    vendor: $('#ef-vendor').value.trim(),
+    invoice: $('#ef-invoice').value.trim(),
+    commodity: $('#ef-commodity').value.trim(),
+    customer: $('#ef-customer').value.trim(),
+    exFactory: $('#ef-exFactory').value || null,
+    vesselPlan: $('#ef-vesselPlan').value || null,
+    actualETD: $('#ef-actualETD').value || null,
+    eta: $('#ef-eta').value || null,
+    amtUSD: parseAmt($('#ef-amtUSD').value),
+    comments: $('#ef-comments').value.trim(),
+    terminal: $('#ef-terminal').value.trim(),
+    shippingLine: $('#ef-shippingLine').value.trim(),
+    isf: $('#ef-isf').value.trim(),
+    billNumber: $('#ef-billNumber').value.trim(),
+    hbl: $('#ef-hbl').value.trim(),
+    masterBL: $('#ef-masterBL').value.trim(),
+    freightCost: parseAmt($('#ef-freightCost').value),
+    source: (editingId === '__new__' || !CONTAINERS.find(c=>c.id===editingId)) ? 'manual' : (CONTAINERS.find(c=>c.id===editingId).source || 'manual'),
+    imported: Date.now(),
+    deliveredManual: $('#ef-delivered').checked || undefined
+  };
+  /* the editor has no file inputs, so carry any attachments across */
+  {
+    const prev = CONTAINERS.find(c => c.id === editingId) || CONTAINERS.find(c => c.id === contId);
+    if (prev){ rec.vendorSlip = prev.vendorSlip || null; rec.printSlip = prev.printSlip || null; }
+  }
+  if (editingId && editingId !== '__new__' && editingId !== contId){
+    /* container # changed — remove old */
+    CONTAINERS = CONTAINERS.filter(c => c.id !== editingId);
+  }
+  const existing = CONTAINERS.findIndex(c => c.id === contId);
+  if (existing >= 0) CONTAINERS[existing] = rec; else CONTAINERS.push(rec);
+  save().then(ok => {
+    if (!ok){ alert('Could not save — browser storage error. Try again or check disk space.'); return; }
+    closeEditor(); renderAll();
+  });
+}
+async function deleteEditor(){
+  if (!editingId || editingId === '__new__') return;
+  if (!await uiAsk('Delete container ' + editingId + '?', { yes:'Delete', danger:true })) return;
+  slipPurge(CONTAINERS.find(c => c.id === editingId));
+  CONTAINERS = CONTAINERS.filter(c => c.id !== editingId);
+  save().then(ok => {
+    if (!ok){ alert('Could not save — browser storage error.'); return; }
+    closeEditor(); renderAll();
+  });
+}
+
+/* ---------------- import modal ---------------- */
+let _pendingImport = null;
+/* A log of what was imported and when. Kept in this browser, capped so it
+   cannot grow without bound, and shown from the Import button so a wrong file
+   can be traced rather than guessed at. */
+const IMP_LOG_KEY = 'hw_ctr_imports';
+const IMP_LOG_MAX = 60;
+function impLogRead(){
+  try { const v = JSON.parse(localStorage.getItem(IMP_LOG_KEY) || '[]'); return Array.isArray(v) ? v : []; }
+  catch(e){ return []; }
+}
+function impLogAdd(entry){
+  try {
+    const log = impLogRead();
+    log.unshift(entry);
+    localStorage.setItem(IMP_LOG_KEY, JSON.stringify(log.slice(0, IMP_LOG_MAX)));
+  } catch(e){}
+}
+function impLogClear(){ try { localStorage.removeItem(IMP_LOG_KEY); } catch(e){} }
+
+let _pendingFile = null;          // remembered so the log can name the file
+let _lastSheetCount = 0;
+
+function showImportHistory(){
+  const log = impLogRead();
+  $('#impMdl').classList.add('open');
+  $('#impSub').textContent = 'Import history';
+  let html;
+  if (!log.length){
+    html = '<div class="imp-note">Nothing imported yet on this browser.</div>';
+  } else {
+    html = '<div class="imp-note" style="margin-bottom:8px">'
+         + log.length + ' import' + (log.length===1?'':'s') + ', most recent first. '
+         + 'Kept on this browser only.</div>'
+         + '<table class="imp-hist"><thead><tr>'
+         + '<th>When</th><th>File</th><th class="num">Sheets</th>'
+         + '<th class="num">Added</th><th class="num">Updated</th><th class="num">Size</th>'
+         + '</tr></thead><tbody>'
+         + log.map(e => '<tr><td>' + esc(new Date(e.at).toLocaleString()) + '</td>'
+             + '<td>' + esc(e.file || '\u2014') + '</td>'
+             + '<td class="num">' + (e.sheets || 0) + '</td>'
+             + '<td class="num">' + (e.added || 0) + '</td>'
+             + '<td class="num">' + (e.updated || 0) + '</td>'
+             + '<td class="num">' + (e.size ? slipSize(e.size) : '\u2014') + '</td></tr>').join('')
+         + '</tbody></table>';
+  }
+  $('#impBody').innerHTML = html;
+  $('#impConfirm').style.display = 'none';
+  $('#impActions').style.display = 'flex';
+  _pendingImport = null;
+}
+
+async function handleFile(file){
+  _pendingFile = file;
+  $('#impMdl').classList.add('open');
+  $('#impSub').textContent = 'Reading ' + file.name + '…';
+  $('#impBody').innerHTML = '<div class="imp-loading"><span class="spin"></span> Parsing workbook…</div>';
+  $('#impActions').style.display = 'none';
+  try {
+    const sheets = await readWorkbook(file);
+    let allRecs = [];
+    let sheetInfo = [];
+    for (const name in sheets){
+      const { records, skipped, autoDelivered } = parseSheet(sheets[name], name);
+      sheetInfo.push({ name, count: records.length, skipped, autoDelivered });
+      allRecs = allRecs.concat(records);
+    }
+    /* De-dup within import — later record wins. If any duplicate had
+       deliveredManual set, keep that flag alive. */
+    const seen = {};
+    allRecs.forEach((r, i) => {
+      if (seen[r.id] != null){
+        const prev = allRecs[seen[r.id]];
+        if (prev.deliveredManual === true) r.deliveredManual = true;
+      }
+      seen[r.id] = i;
+    });
+    allRecs = allRecs.filter((r, i) => seen[r.id] === i);
+
+    if (!allRecs.length){
+      $('#impBody').innerHTML = `<div class="imp-error"><b>No container records found.</b><br>The file was parsed, but no rows had a valid container number in a column named <code>CONTAINER #</code>. Check the header row is intact.</div>`;
+      $('#impActions').style.display = 'flex';
+      $('#impConfirm').style.display = 'none';
+      _pendingImport = null;
+      return;
+    }
+    /* Preview: how many would be added vs updated. */
+    const byId = {}; CONTAINERS.forEach(c => byId[c.id] = c);
+    let willAdd = 0, willUpdate = 0, willAutoDeliver = 0;
+    allRecs.forEach(r => {
+      if (byId[r.id]) willUpdate++; else willAdd++;
+      if (r.deliveredManual === true) willAutoDeliver++;
+    });
+
+    let html = `<div class="imp-summary"><b>${allRecs.length}</b> valid container${allRecs.length===1?'':'s'} found across <b>${sheetInfo.length}</b> sheet${sheetInfo.length===1?'':'s'}.<br>`;
+    html += sheetInfo.map(s => `<div>&nbsp;&nbsp;• <b>${esc(s.name)}</b>: ${s.count} record${s.count===1?'':'s'}${s.autoDelivered ? ' <span style="color:#1B7A3D">✓ auto-marked as delivered</span>' : ''}${s.skipped ? ' (' + s.skipped + ' non-data row' + (s.skipped===1?'':'s') + ' skipped)' : ''}</div>`).join('');
+    html += `<br>Applying will:<br>&nbsp;&nbsp;➕ <b>Add</b> ${willAdd} new container${willAdd===1?'':'s'}<br>&nbsp;&nbsp;🔄 <b>Update</b> ${willUpdate} existing container${willUpdate===1?'':'s'}`;
+    if (willAutoDeliver) html += `<br>&nbsp;&nbsp;✓ <b>${willAutoDeliver}</b> will be marked <b>delivered</b> (from history sheets)`;
+    html += `</div>`;
+    $('#impBody').innerHTML = html;
+    $('#impConfirm').style.display = '';
+    $('#impActions').style.display = 'flex';
+    _pendingImport = allRecs;
+    _lastSheetCount = sheetInfo.length;
+  } catch(err){
+    $('#impBody').innerHTML = `<div class="imp-error"><b>Import failed.</b><br>${esc(err.message || String(err))}</div>`;
+    $('#impConfirm').style.display = 'none';
+    $('#impActions').style.display = 'flex';
+    _pendingImport = null;
+  }
+}
+function confirmImport(){
+  if (!_pendingImport){ $('#impMdl').classList.remove('open'); return; }
+  const { added, updated } = mergeImport(_pendingImport);
+  save().then(ok => {
+    if (!ok){ alert('Could not save — browser storage error.'); return; }
+    impLogAdd({ at: Date.now(),
+                file: _pendingFile ? _pendingFile.name : '',
+                size: _pendingFile ? _pendingFile.size : 0,
+                sheets: _lastSheetCount || 0,
+                added: added, updated: updated });
+    $('#impMdl').classList.remove('open');
+    _pendingImport = null;
+    renderAll();
+    /* toast */
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:12px 18px;background:linear-gradient(180deg,#5b9bff,#3B7DF5);color:#fff;border-radius:12px;font:600 13px Inter;box-shadow:0 6px 18px rgba(59,125,245,.4);z-index:1000;';
+    t.textContent = `✓ Imported ${added} new + ${updated} updated`;
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .4s'; setTimeout(() => t.remove(), 400); }, 2600);
+  });
+}
+
+/* ---------------- persist ---------------- */
+async function save(){
+  LEADS = null;                       // lead times are derived - recompute on next read
+  try { await idbPut(KEY, CONTAINERS); return true; }
+  catch(e){ console.error('containers save failed:', e); return false; }
+}
+async function load(){
+  try { const v = await idbGet(KEY); if (Array.isArray(v)) CONTAINERS = v; } catch(e){}
+}
+async function saveSettings(){
+  try { await idbPut('settings', SETTINGS); return true; }
+  catch(e){ console.error('settings save failed:', e); return false; }
+}
+async function loadSettings(){
+  try {
+    const v = await idbGet('settings');
+    if (v && typeof v === 'object') SETTINGS = Object.assign({}, DEFAULT_SETTINGS, v);
+    SETTINGS.hiddenCols = Array.isArray(SETTINGS.hiddenCols) ? SETTINGS.hiddenCols.slice() : [];
+    if (applyNewColDefaults()) await saveSettings();
+  } catch(e){}
+}
+
+/* ---------------- settings modal ---------------- */
+function refreshSetColList(){
+  const list = $('#setColList');
+  if (!list) return;
+  list.innerHTML = '';
+  const cols = getCols();
+  cols.forEach((col, idx) => {
+    const item = document.createElement('div');
+    item.className = 'set-col-item';
+    item.setAttribute('draggable', 'true');
+    item.setAttribute('data-key', col.k);
+    const hid = isColHidden(col.k);
+    if (hid) item.classList.add('col-off');
+    item.innerHTML = `<span class="drag-grip">⋮⋮</span>`
+      + `<label class="col-tick"><input type="checkbox" data-vis="${col.k}" ${hid?'':'checked'}></label>`
+      + `<span class="col-name">${esc(col.label)}</span>`
+      + `<button class="col-btn" data-act="up" ${idx===0?'disabled':''}>▲</button>`
+      + `<button class="col-btn" data-act="down" ${idx===cols.length-1?'disabled':''}>▼</button>`;
+    list.appendChild(item);
+  });
+  /* visibility */
+  const setHidden = arr => {
+    SETTINGS.hiddenCols = arr;
+    saveSettings().then(() => { renderTable(); refreshSetColList(); });
+  };
+  list.querySelectorAll('input[data-vis]').forEach(cb => cb.addEventListener('click', e => {
+    e.stopPropagation();
+    const k = cb.getAttribute('data-vis');
+    let hid = (SETTINGS.hiddenCols||[]).slice();
+    if (cb.checked) hid = hid.filter(x => x !== k);
+    else if (hid.indexOf(k) < 0) hid.push(k);
+    if (hid.length >= getCols().length){ cb.checked = true; return; }   // keep at least one column
+    setHidden(hid);
+  }));
+  const nVis = getCols().length - (SETTINGS.hiddenCols||[]).length;
+  const cnt = $('#setColCount');
+  if (cnt) cnt.textContent = nVis + ' of ' + getCols().length + ' shown';
+  const bAll = $('#setColAll'), bNone = $('#setColNone');
+  if (bAll) bAll.onclick = () => setHidden([]);
+  if (bNone) bNone.onclick = () => setHidden(getCols().slice(1).map(c => c.k));
+
+  /* buttons */
+  list.querySelectorAll('.col-btn').forEach(btn => btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const item = btn.closest('.set-col-item');
+    const key = item.getAttribute('data-key');
+    const act = btn.getAttribute('data-act');
+    const cur = getCols().map(c => c.k);
+    const i = cur.indexOf(key);
+    if (act === 'up' && i > 0){ const t = cur[i-1]; cur[i-1] = cur[i]; cur[i] = t; }
+    else if (act === 'down' && i < cur.length - 1){ const t = cur[i+1]; cur[i+1] = cur[i]; cur[i] = t; }
+    else return;
+    SETTINGS.columnOrder = cur;
+    saveSettings().then(() => { renderTable(); refreshSetColList(); });
+  }));
+  /* drag within settings list */
+  list.querySelectorAll('.set-col-item').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', item.getAttribute('data-key'));
+      e.dataTransfer.effectAllowed = 'move';
+      item.classList.add('drag-src');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('drag-src');
+      list.querySelectorAll('.set-col-item').forEach(x => x.classList.remove('drop-before','drop-after'));
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      const rect = item.getBoundingClientRect();
+      const after = (e.clientY - rect.top) > rect.height / 2;
+      list.querySelectorAll('.set-col-item').forEach(x => x.classList.remove('drop-before','drop-after'));
+      item.classList.add(after ? 'drop-after' : 'drop-before');
+    });
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      const from = e.dataTransfer.getData('text/plain');
+      const to = item.getAttribute('data-key');
+      const rect = item.getBoundingClientRect();
+      const placeAfter = (e.clientY - rect.top) > rect.height / 2;
+      if (from && from !== to) reorderColumn(from, to, placeAfter);
+    });
+  });
+}
+function openSettings(){
+  $('#setAlertDays').value = SETTINGS.alertDays;
+  const est = $('#setEstimate'); if (est) est.checked = SETTINGS.estimateDates !== false;
+  refreshSetColList();
+  $('#settingsMdl').classList.add('open');
+}
+function closeSettings(){ $('#settingsMdl').classList.remove('open'); }
+function saveSettingsFromModal(){
+  const v = parseInt($('#setAlertDays').value, 10);
+  if (isNaN(v) || v < 1 || v > 365){ alert('Alert days must be between 1 and 365.'); return; }
+  SETTINGS.alertDays = v;
+  const est = $('#setEstimate'); if (est) SETTINGS.estimateDates = est.checked;
+  LEADS = null;
+  saveSettings().then(ok => {
+    if (!ok){ alert('Could not save preferences — browser storage error.'); return; }
+    $('#alertDaysLbl').textContent = SETTINGS.alertDays;
+    closeSettings(); renderAll();
+  });
+}
+async function resetSettings(){
+  if (!await uiAsk('Reset all preferences to defaults?', { yes:'Reset' })) return;
+  SETTINGS = { ...DEFAULT_SETTINGS, hiddenCols: [], knownCols: [] };
+  applyNewColDefaults();
+  LEADS = null;
+  saveSettings().then(() => {
+    $('#alertDaysLbl').textContent = SETTINGS.alertDays;
+    $('#setAlertDays').value = SETTINGS.alertDays;
+    const est = $('#setEstimate'); if (est) est.checked = SETTINGS.estimateDates !== false;
+    refreshSetColList(); renderAll();
+  });
+}
+
+/* ---------------- export ---------------- */
+function exportCSV(){
+  if (!CONTAINERS.length){ alert('Nothing to export.'); return; }
+  const cols = ['container','vendor','invoice','commodity','customer','exFactory','vesselPlan','actualETD','eta','amtUSD','shippingLine','terminal','isf','billNumber','hbl','masterBL','freightCost','comments','source','vendorSlip','printSlip','projectedETD','projectedETA'];
+  const esc2 = v => { const s = String(v==null?'':v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
+  const lines = [cols.join(',')];
+  const cell = (c,k) => {
+    if (k==='vendorSlip'||k==='printSlip') return (c[k]&&c[k].name)||'';
+    if (k==='projectedETD'||k==='projectedETA'){
+      const e = estimateDates(c);
+      if (k==='projectedETD') return e.etdEst ? e.etd : '';
+      return e.etaEst ? e.eta : '';
+    }
+    return c[k];
+  };
+  CONTAINERS.forEach(c => lines.push(cols.map(k => esc2(cell(c,k))).join(',')));
+  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'containers_' + todayISO() + '.csv';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+/* ---------------- wire up ---------------- */
+// the Import button opens a menu now - see the block below
+$('#importFile').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) handleFile(f);
+  e.target.value = '';
+});
+$('#addBtn').addEventListener('click', () => openEditor('__new__'));
+$('#exportBtn').addEventListener('click', exportCSV);
+$('#clearBtn').addEventListener('click', async () => {
+  if (!CONTAINERS.length) return;
+  if (!await uiAsk('Delete ALL ' + CONTAINERS.length + ' container records? This cannot be undone.',
+                   { yes:'Delete everything', danger:true })) return;
+  CONTAINERS.forEach(slipPurge);
+  CONTAINERS = [];
+  await save();
+  renderAll();
+});
+$('#search').addEventListener('input', e => { UI.search = e.target.value; renderTable(); });
+$('#fLine').addEventListener('change', e => { UI.line = e.target.value; renderTable(); });
+$('#fVendor').addEventListener('change', e => { UI.vendor = e.target.value; renderTable(); });
+$('#fCustomer').addEventListener('change', e => { UI.customer = e.target.value; renderTable(); });
+$('#fShowReceived').addEventListener('change', e => { UI.showReceived = e.target.checked; renderTable(); });
+$('#clearFilters').addEventListener('click', () => {
+  UI.search = ''; UI.line = ''; UI.vendor = ''; UI.customer = ''; UI.statusFilter = 'all'; UI.showReceived = false;
+  $('#search').value = ''; $('#fLine').value = ''; $('#fVendor').value = ''; $('#fCustomer').value = ''; $('#fShowReceived').checked = false;
+  renderAll();
+});
+$$('.kpi').forEach(k => k.addEventListener('click', () => {
+  UI.statusFilter = k.getAttribute('data-status');
+  renderAll();
+}));
+
+$('#editCancel').addEventListener('click', closeEditor);
+$('#editSave').addEventListener('click', saveEditor);
+$('#editDelBtn').addEventListener('click', deleteEditor);
+$('#editMdl').addEventListener('click', e => { if (e.target === $('#editMdl')) closeEditor(); });
+
+$('#impCancel').addEventListener('click', () => { $('#impMdl').classList.remove('open'); _pendingImport = null; });
+/* Import is two things now - pick a file, or look at what was picked before -
+   so the button opens a short menu rather than doing one and hiding the other. */
+(function(){
+  const wrap = $('.imp-wrap'), menu = $('#impMenu');
+  if (!wrap || !menu) return;
+  $('#importBtn').addEventListener('click', e => { e.stopPropagation(); menu.classList.toggle('open'); });
+  menu.querySelectorAll('[data-imp]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      menu.classList.remove('open');
+      if (b.getAttribute('data-imp') === 'hist') return showImportHistory();
+      const inp = $('#importFile');
+      if (inp){ inp.value = ''; inp.click(); }
+    });
+  });
+  document.addEventListener('click', () => menu.classList.remove('open'));
+})();
+$('#impConfirm').addEventListener('click', confirmImport);
+$('#impMdl').addEventListener('click', e => { if (e.target === $('#impMdl')){ $('#impMdl').classList.remove('open'); _pendingImport = null; } });
+
+$('#settingsBtn').addEventListener('click', openSettings);
+$('#setCancel').addEventListener('click', closeSettings);
+$('#setSave').addEventListener('click', saveSettingsFromModal);
+  $('#setPinBtn').addEventListener('click', manageSlipPin);
+$('#setResetBtn').addEventListener('click', resetSettings);
+$('#settingsMdl').addEventListener('click', e => { if (e.target === $('#settingsMdl')) closeSettings(); });
+
+/* parent tab refresh signal */
+window.addEventListener('message', e => { if (e && e.data === 'shown') renderAll(); });
+
+/* init — settings first (so alert threshold + column order are ready), then data */
+loadSettings().then(() => {
+  $('#alertDaysLbl').textContent = SETTINGS.alertDays;
+  return load();
+}).then(renderAll);
+
+})();
+</script>
+<script>
+(function(){
+  if(window.__selxInit) return; window.__selxInit=true;
+  var openPop=null, openBtn=null, cleanup=null;
+  function txt(o){ return (o.textContent||'').replace(/\s+/g,' ').trim(); }
+  function labelOf(sel){ var o=sel.options[sel.selectedIndex]; return o?txt(o):''; }
+  function closePop(){
+    if(openPop){ openPop.remove(); openPop=null; openBtn=null; }
+    if(cleanup){ document.removeEventListener('mousedown',cleanup,true); document.removeEventListener('keydown',onKey,true);
+      window.removeEventListener('resize',closePop); window.removeEventListener('scroll',onScroll,true); cleanup=null; }
+  }
+  function onKey(e){ if(e.key==='Escape') closePop(); }
+  function onScroll(ev){ if(openPop && !openPop.contains(ev.target)) closePop(); }
+  function skip(sel){
+    if(!sel || sel.tagName!=='SELECT') return true;
+    if(sel.multiple) return true;
+    if(sel.closest('td,tr,thead')) return true;   // per-row table selects stay native
+    return false;
+  }
+  function enhance(sel){
+    if(sel.dataset.selx) return;
+    if(skip(sel)){ sel.dataset.selx='skip'; return; }
+    sel.dataset.selx='1';
+    var cs=getComputedStyle(sel);
+    var wrap=document.createElement('span'); wrap.className='selx';
+    wrap.style.display = (cs.display==='block') ? 'block' : 'inline-block';
+    if(cs.flexGrow && cs.flexGrow!=='0'){ wrap.style.flex=cs.flexGrow+' '+cs.flexShrink+' '+(cs.flexBasis||'auto'); wrap.style.minWidth='0'; }
+    if(sel.style.width==='100%'){ wrap.style.width='100%'; }
+    try{ wrap.style.margin=cs.margin; }catch(e){}
+    wrap.style.verticalAlign='middle';
+    sel.parentNode.insertBefore(wrap, sel);
+    wrap.appendChild(sel);
+    sel.classList.add('selx-native'); sel.style.margin='0';
+    var btn=document.createElement('button'); btn.type='button'; btn.className='selx-btn';
+    btn.innerHTML='<span class="selx-val"></span><span class="selx-caret">\u25BE</span>';
+    wrap.appendChild(btn);
+    sel.__selxBtn=btn;
+    var valEl=btn.querySelector('.selx-val');
+    function multiVals(el){
+      try{ return JSON.parse(el.dataset.values||'[]'); }catch(e){ return []; }
+    }
+    function isMulti(el){ return el.dataset.multi==='1'; }
+    function sync(){
+      if(isMulti(sel)){
+        const v=multiVals(sel);
+        const first=sel.options[0]?txt(sel.options[0]):'All';
+        valEl.textContent = v.length===0 ? first : (v.length===1 ? v[0] : (v.length+' selected'));
+        valEl.style.color = v.length ? '' : '';
+        return;
+      }
+      valEl.textContent=labelOf(sel)||sel.getAttribute('placeholder')||'Select\u2026';
+      // mirror the chosen option's colour onto the closed button, so a
+      // discontinued selection still reads as discontinued
+      var o=sel.options[sel.selectedIndex];
+      valEl.style.color = (o && o.style && o.style.color) ? o.style.color : '';
+    }
+    sync();
+    sel.addEventListener('change', sync);
+    try{ new MutationObserver(sync).observe(sel,{childList:true,subtree:true}); }catch(e){}
+    btn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); toggle(sel,btn); });
+    btn.addEventListener('mousedown', function(e){ e.preventDefault(); });
+  }
+  function toggle(sel,btn){
+    var same=(openBtn===btn); closePop(); if(same) return;
+    var opts=Array.prototype.slice.call(sel.options);
+    var pop=document.createElement('div'); pop.className='selx-pop';
+    var multi=sel.dataset.multi==='1';
+    var head=document.createElement('div'); head.className='selx-head';
+    var clr=document.createElement('button'); clr.type='button'; clr.className='selx-clear'; clr.textContent='Clear';
+    head.appendChild(clr);
+    if(multi){
+      var done=document.createElement('button'); done.type='button'; done.className='selx-done'; done.textContent='Done';
+      done.onclick=function(){ closePop(); };
+      head.appendChild(done);
+    }
+    pop.appendChild(head);
+    var search=null;
+    if(opts.length>8){ search=document.createElement('input'); search.className='selx-search'; search.type='text'; search.placeholder='Search\u2026'; pop.appendChild(search); }
+    var list=document.createElement('div'); list.className='selx-list'; pop.appendChild(list);
+    function fire(){ sel.dispatchEvent(new Event('input',{bubbles:true})); sel.dispatchEvent(new Event('change',{bubbles:true})); }
+    function curVals(){ try{ return JSON.parse(sel.dataset.values||'[]'); }catch(e){ return []; } }
+    function setVals(a){ sel.dataset.values=JSON.stringify(a); fire(); }
+    function pick(o){
+      if(multi){
+        if(!o.value){ setVals([]); draw(search?search.value:''); return; }   // the "All …" row clears
+        var a=curVals(), i=a.indexOf(o.value);
+        if(i>=0) a.splice(i,1); else a.push(o.value);
+        setVals(a); draw(search?search.value:'');                            // stays open
+        return;
+      }
+      if(sel.value!==o.value){ sel.value=o.value; fire(); }
+      closePop();
+    }
+    clr.onclick=function(){
+      if(multi){ setVals([]); draw(search?search.value:''); }
+      else { sel.value=''; fire(); closePop(); }
+    };
+    // Pages mark special options with an inline colour (e.g. discontinued items in
+    // red) — carry that through so the meaning survives. Only inline styles are
+    // read: deriving colours from computed styles once turned an option white on
+    // a white popup, i.e. an invisible blank row.
+    function safeColour(c){
+      if(!c) return '';
+      c = String(c).trim();
+      if(/^(transparent|inherit|initial|unset|currentcolor)$/i.test(c)) return '';
+      var m = c.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+))?/i);
+      var r,g,b,a=1;
+      if(m){ r=+m[1]; g=+m[2]; b=+m[3]; if(m[4]!=null) a=parseFloat(m[4]); }
+      else if(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c)){
+        var hx=c.slice(1); if(hx.length===3) hx=hx[0]+hx[0]+hx[1]+hx[1]+hx[2]+hx[2];
+        r=parseInt(hx.slice(0,2),16); g=parseInt(hx.slice(2,4),16); b=parseInt(hx.slice(4,6),16);
+      } else return c;                                   // named colour — trust it
+      if(a < 0.35) return '';                            // too faint to read
+      if((0.299*r + 0.587*g + 0.114*b) > 218) return ''; // too pale on a white popup
+      return c;
+    }
+    function draw(q){
+      q=(q||'').toLowerCase().trim(); list.innerHTML=''; var any=false;
+      var chosen=multi?curVals():null;
+      opts.forEach(function(o){ var t=txt(o); if(q && t.toLowerCase().indexOf(q)<0) return; any=true;
+        var on = multi ? (o.value ? chosen.indexOf(o.value)>=0 : chosen.length===0) : o.selected;
+        var row=document.createElement('div'); row.className='selx-opt'+(on?' selx-on':'');
+        if(multi){
+          var bx=document.createElement('span'); bx.className='selx-box'+(on?' on':'');
+          bx.textContent=on?'\u2713':'';
+          row.appendChild(bx);
+          var lb=document.createElement('span'); lb.textContent=t||'\u2014'; row.appendChild(lb);
+        } else { row.textContent=t||'\u2014'; }
+        if(!on){                                         // selected rows keep white-on-blue
+          var col=safeColour(o.style && o.style.color);
+          if(col){
+            row.style.color=col;
+            var wt=(o.style&&o.style.fontWeight)||'';
+            if(wt && wt!=='400' && wt!=='normal') row.style.fontWeight=wt;
+          }
+        }
+        row.addEventListener('click', function(){ pick(o); }); list.appendChild(row); });
+      if(!any){ var em=document.createElement('div'); em.className='selx-empty'; em.textContent='No matches'; list.appendChild(em); }
+    }
+    draw('');
+    document.body.appendChild(pop);
+    var r=btn.getBoundingClientRect();
+    pop.style.minWidth=Math.max(r.width,210)+'px';
+    pop.style.left='0px'; pop.style.top='0px';
+    var pr=pop.getBoundingClientRect(), vw=window.innerWidth, vh=window.innerHeight;
+    var left=r.left; if(left+pr.width>vw-8) left=Math.max(8, vw-8-pr.width);
+    var top=r.bottom+6; if(top+pr.height>vh-8){ var above=r.top-6-pr.height; top = above>8? above : Math.max(8, vh-8-pr.height); }
+    pop.style.left=left+'px'; pop.style.top=top+'px';
+    openPop=pop; openBtn=btn;
+    if(search){ search.addEventListener('input',function(){ draw(search.value); }); setTimeout(function(){ try{search.focus();}catch(e){} },0); }
+    else { var selRow=list.querySelector('.selx-opt.selx-on'); if(selRow) selRow.scrollIntoView({block:'nearest'}); }
+    cleanup=function(ev){ if(!pop.contains(ev.target) && ev.target!==btn && !btn.contains(ev.target)) closePop(); };
+    document.addEventListener('mousedown',cleanup,true);
+    document.addEventListener('keydown',onKey,true);
+    window.addEventListener('resize',closePop);
+    window.addEventListener('scroll',onScroll,true);
+  }
+  var timer=null;
+  function scan(){ try{ document.querySelectorAll('select:not([data-selx])').forEach(enhance); }catch(e){} }
+  function schedule(){ if(timer) return; timer=setTimeout(function(){ timer=null; scan(); },100); }
+  function boot(){
+    scan();
+    try{ new MutationObserver(function(muts){ for(var i=0;i<muts.length;i++){ var a=muts[i].addedNodes; if(!a) continue; for(var j=0;j<a.length;j++){ var n=a[j]; if(n.nodeType===1 && (n.tagName==='SELECT' || (n.querySelector && n.querySelector('select:not([data-selx])')))){ schedule(); return; } } } }).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+    setInterval(function(){ try{ document.querySelectorAll('select[data-selx="1"]').forEach(function(s){
+      var b=s.__selxBtn; if(!b) return; var v=b.querySelector('.selx-val'); if(!v) return;
+      if(s.dataset.multi==='1'){
+        var a=[]; try{ a=JSON.parse(s.dataset.values||'[]'); }catch(e){}
+        var first=s.options[0]?(s.options[0].textContent||'').trim():'All';
+        var l=a.length===0?first:(a.length===1?a[0]:(a.length+' selected'));
+        if(v.textContent!==l) v.textContent=l;
+        return;
+      }
+      var l2=labelOf(s)||b.getAttribute('data-ph')||'Select\u2026';
+      if(v.textContent!==l2){ v.textContent=l2; var o=s.options[s.selectedIndex]; v.style.color=(o&&o.style&&o.style.color)||''; }
+    }); }catch(e){} }, 700);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+})();
+
+</script>
+</body>
+</html>
