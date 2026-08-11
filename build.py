@@ -1,24 +1,21 @@
 import base64, io, os, re
 from mobile_block import MOBILE
 
-
-# Generate the browser-safe Supabase configuration from Vercel environment variables.
-# The Publishable/anon key is intended for frontend use; never use a service-role key here.
-supabase_url = os.environ.get("SUPABASE_URL", "").strip()
-supabase_key = os.environ.get("SUPABASE_ANON_KEY", "").strip()
-if not supabase_url or not supabase_key:
-    raise SystemExit("Missing SUPABASE_URL or SUPABASE_ANON_KEY in the Vercel environment.")
-
-config_js = """window.HW_SUPABASE_CONFIG = {
-  url: %r,
-  anonKey: %r,
-  workspaceId: '00000000-0000-0000-0000-000000000001'
-};
-""" % (supabase_url, supabase_key)
-
-io.open("supabase-config.js", "w", encoding="utf-8").write(config_js)
-
 SRC = 'shell.template.html'
+
+# Inject Supabase browser configuration from Vercel build-time environment
+# variables. The publishable/anon key is intended for browser use; never use
+# the service-role/secret key here.
+supabase_url = os.environ.get('SUPABASE_URL', '').strip()
+supabase_key = os.environ.get('SUPABASE_ANON_KEY', '').strip()
+if not supabase_url or not supabase_key:
+    raise SystemExit('Missing SUPABASE_URL or SUPABASE_ANON_KEY in the Vercel build environment.')
+if 'YOUR_' in supabase_key or 'YOUR-PROJECT' in supabase_url:
+    raise SystemExit('SUPABASE_URL/SUPABASE_ANON_KEY still contain placeholder values.')
+
+config = "/* Generated at build time from Vercel Environment Variables. */\nwindow.HW_SUPABASE_CONFIG = {\n  url: %r,\n  anonKey: %r,\n  workspaceId: '00000000-0000-0000-0000-000000000001'\n};\n" % (supabase_url, supabase_key)
+io.open('supabase-config.js','w',encoding='utf-8').write(config)
+
 shell = io.open(SRC, encoding='utf-8').read()
 
 for name in ['inventory','products','orders','financial','attendance','containers']:

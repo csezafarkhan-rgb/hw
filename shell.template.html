@@ -312,6 +312,12 @@
         try{ window.dispatchEvent(new CustomEvent('hw-ls-ext',{detail:{key:m.key}})); }catch(_){} }
     });
     function rpc(msg){ return new Promise(function(res){ var id=++rid; var done=false; waiting[id]=function(m){ if(!done){ done=true; res(m); } }; msg.__hwb=1; msg.rid=id; post(msg); setTimeout(function(){ if(!done){ done=true; delete waiting[id]; res({data:{}}); } }, 2500); }); }
+    window.__HW_CLOUD_BRIDGE = {
+      status: function(){ return rpc({op:'cloud-status'}).then(function(r){ return r.status || {configured:false,authenticated:false,email:null}; }); },
+      readDb: function(db){ return rpc({op:'cloud-read',db:db}).then(function(r){ if(!r.ok) throw new Error(r.error||'Cloud read failed'); return r.data; }); },
+      put: function(db,store,key,value){ return rpc({op:'cloud-put',db:db,store:store,key:key,value:value}).then(function(r){ if(!r.ok) throw new Error(r.error||'Cloud write failed'); return true; }); },
+      del: function(db,store,key){ return rpc({op:'cloud-del',db:db,store:store,key:key}).then(function(r){ if(!r.ok) throw new Error(r.error||'Cloud delete failed'); return true; }); }
+    };
 
     function Req(){ this.onsuccess=null; this.onerror=null; this.onupgradeneeded=null; this.result=undefined; }
     function succeed(req,val){ req.result=val; Promise.resolve().then(function(){ if(req.onsuccess){ try{ req.onsuccess({target:req}); }catch(e){} } }); }
@@ -462,6 +468,13 @@
       case 'ls-set': try{ localStorage.setItem(m.key, m.value); }catch(_){} broadcast(e.source, {__hwb:1, op:'ls-ext', key:m.key, value:m.value}); break;
       case 'ls-remove': try{ localStorage.removeItem(m.key); }catch(_){} broadcast(e.source, {__hwb:1, op:'ls-ext', key:m.key, del:1}); break;
       case 'ls-clear': try{ localStorage.clear(); }catch(_){} break;
+      case 'cloud-status': cloudOn().then(function(on){
+        if(on){ return HWCloud.status().then(function(st){ reply({ok:true,status:st}); }); }
+        reply({ok:true,status:{configured:!!(window.HWCloud&&HWCloud.configured),authenticated:false,email:null}});
+      }).catch(function(err){ reply({ok:false,error:String(err&&err.message||err)}); }); break;
+      case 'cloud-read': bridgeReadDb(m.db).then(function(data){ reply({ok:true,data:data}); }).catch(function(err){ reply({ok:false,error:String(err&&err.message||err),data:null}); }); break;
+      case 'cloud-put': bridgePut(m.db,m.store,m.key,m.value).then(function(){ reply({ok:true}); }).catch(function(err){ reply({ok:false,error:String(err&&err.message||err)}); }); break;
+      case 'cloud-del': bridgeDel(m.db,m.store,m.key).then(function(){ reply({ok:true}); }).catch(function(err){ reply({ok:false,error:String(err&&err.message||err)}); }); break;
       case 'idb-open': bridgeReadDb(m.db).then(function(data){ reply({data:data}); }).catch(function(){ reply({data:{}}); }); break;
       case 'idb-put': bridgePut(m.db, m.store, m.key, m.value).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, key:m.key, value:m.value}); break;
       case 'idb-del': bridgeDel(m.db, m.store, m.key).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, key:m.key, del:1}); break;

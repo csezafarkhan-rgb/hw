@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "buildCommand": "python3 build.py",
-  "installCommand": "",
+  "installCommand": null,
   "outputDirectory": ".",
   "cleanUrls": true,
   "headers": [
