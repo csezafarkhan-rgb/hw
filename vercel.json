@@ -8,7 +8,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/Homeweavers_Workspace.html"
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "source": "/Homeweavers_Workspace.html",
+      "source": "/index.html",
       "headers": [
         {
           "key": "Cache-Control",
