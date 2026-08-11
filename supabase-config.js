@@ -1,6 +1,5 @@
-/* Generated at build time from Vercel Environment Variables. */
 window.HW_SUPABASE_CONFIG = {
-  url: 'https://ciyotgaoycsmyqnkegnp.supabase.co',
-  anonKey: 'sb_publishable_TEST',
+  url: 'https://YOUR-PROJECT.supabase.co',
+  anonKey: 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY',
   workspaceId: '00000000-0000-0000-0000-000000000001'
 };
