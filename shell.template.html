@@ -396,10 +396,16 @@
   function txWrite(fn){ return bridgeDB().then(function(d){ return new Promise(function(res, rej){ var tx = d.transaction('kv','readwrite'); fn(tx.objectStore('kv')); tx.oncomplete = function(){ res(); }; tx.onerror = function(){ rej(tx.error); }; }); }); }
   function bridgePutLocal(db, store, key, value){ return txWrite(function(st){ try{ st.put(value, ck(db,store,key)); }catch(e){} }); }
   function bridgeDelLocal(db, store, key){ return txWrite(function(st){ st['delete'](ck(db,store,key)); }); }
-  var __cloudReady = (window.HWCloud && window.HWCloud.status)
-    ? window.HWCloud.status().then(function(st){ return !!(st && st.configured && st.authenticated); }).catch(function(){ return false; })
-    : Promise.resolve(false);
-  function cloudOn(){ return __cloudReady; }
+  /* Cloud readiness must be checked after login as well as at page load.
+     The previous implementation captured the initial (usually logged-out)
+     state in a Promise, so a successful Supabase login could still leave the
+     dashboard using local IndexedDB. */
+  function cloudOn(){
+    if (!window.HWCloud || !HWCloud.status) return Promise.resolve(false);
+    return HWCloud.status().then(function(st){
+      return !!(st && st.configured && st.authenticated);
+    }).catch(function(){ return false; });
+  }
   function bridgePut(db, store, key, value){
     return cloudOn().then(function(on){
       if(on) return HWCloud.put(db,store,key,value).catch(function(){ return bridgePutLocal(db,store,key,value); });
