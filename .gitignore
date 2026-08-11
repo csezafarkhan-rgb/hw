@@ -1,0 +1,26 @@
+# Backups carry staff names, salaries and passwords in plain text.
+# They do not belong in a repository, public or private.
+*_Backup_*.json
+Homeweavers_Project_Backup_*.json
+Attendance_Backup_*.json
+Homeweavers_Financial_Data_*.json
+*.xlsx
+*.xls
+*.csv
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node, if a server is added
+node_modules/
+npm-debug.log*
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
