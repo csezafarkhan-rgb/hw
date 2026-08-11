@@ -1,0 +1,45 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homeweavers — Supabase Migration</title>
+<style>
+body{font-family:Inter,Arial,sans-serif;max-width:900px;margin:40px auto;padding:0 20px;color:#18202a}
+button{padding:10px 16px;border:0;border-radius:8px;background:#1f6feb;color:white;cursor:pointer;margin:4px}
+pre{background:#f5f7fa;padding:14px;border-radius:8px;white-space:pre-wrap}
+.ok{color:#137333}.err{color:#b42318}.muted{color:#667085}
+</style></head><body>
+<h1>Homeweavers Supabase Migration</h1>
+<p class="muted">This tool uploads the existing browser-persisted dashboard datasets to the Supabase <code>app_state</code> table. It does not delete local data.</p>
+<p><b>1.</b> Fill in <code>supabase-config.js</code>, then sign in below with a Supabase Auth account that already has a matching <code>app_users</code> row.</p>
+<div>
+<input id="email" type="email" placeholder="Supabase email" style="padding:10px;width:260px">
+<input id="pass" type="password" placeholder="Password" style="padding:10px;width:180px">
+<button id="login">Sign in</button>
+<button id="status">Check status</button>
+</div>
+<hr>
+<button id="inspect">Inspect local data</button>
+<button id="migrate">Migrate mapped stores</button>
+<pre id="out">Waiting…</pre>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script><script src="hw-supabase.js"></script>
+<script>
+(function(){
+ const out=document.getElementById('out');
+ const log=(x,cls)=>{out.textContent+=(out.textContent?'\\n':'')+x};
+ function idb(name,store){return new Promise((res,rej)=>{let r=indexedDB.open(name,1);r.onerror=()=>rej(r.error);r.onsuccess=()=>{let d=r.result;if(!d.objectStoreNames.contains(store)){res({});return}let q=d.transaction(store,'readonly').objectStore(store).openCursor(),o={};q.onsuccess=e=>{let c=e.target.result;if(c){o[c.key]=c.value;c.continue()}else res(o)};q.onerror=()=>rej(q.error)}})}
+ async function localDb(db){
+   if(db==='hw_bridge'){
+     const raw=await idb('hw_bridge','kv'), out={kv:{}};
+     Object.keys(raw).forEach(k=>{let p=String(k).split('\\0'), d=p[0], st=p[1], key=p.slice(2).join('\\0');if(!out[d])out[d]={};if(!out[d][st])out[d][st]={};out[d][st][key]=raw[k]});
+     return out;
+   }
+   const stores={hw_inventory:'working',hw_products:'kv',hw_orders:'kv',hw_containers:'kv',hw_financial:'kv',att_data:'kv'};
+   if(!stores[db]) return null;
+   let raw=await idb(db,stores[db]),o={};o[stores[db]]=raw;return o;
+ }
+ document.getElementById('status').onclick=async()=>{try{log(JSON.stringify(await HWCloud.status(),null,2))}catch(e){log('ERROR: '+e.message)}};
+ document.getElementById('login').onclick=async()=>{try{let r=await HWCloud.signIn(document.getElementById('email').value,document.getElementById('pass').value);log('Signed in: '+r.user.email)}catch(e){log('LOGIN ERROR: '+e.message)}};
+ document.getElementById('inspect').onclick=async()=>{out.textContent='';for(const db of ['hw_bridge','att_data','hw_inventory','hw_products','hw_orders','hw_containers','hw_financial']){try{let d=await localDb(db);log(db+': '+JSON.stringify(d).length+' bytes')}catch(e){log(db+': ERROR '+e.message)}}};
+ document.getElementById('migrate').onclick=async()=>{out.textContent='';for(const db of ['hw_bridge','att_data','hw_inventory','hw_products','hw_orders','hw_containers','hw_financial']){try{let d=await localDb(db);if(!d){log(db+': skipped');continue}let r=await HWCloud.migrateLocalDb(db,d);log(db+': uploaded '+r.rows+' keys')}catch(e){log(db+': ERROR '+e.message)}}log('Done. Local browser data was not deleted.');};
+})();
+</script></body></html>

@@ -224,3 +224,36 @@ Then, each stage leaving the workspace usable:
 
 **Before starting: take a project backup and keep it somewhere safe.** It is
 the only copy of the data, and step 3 is where it gets loaded into the database.
+
+
+## Supabase cloud data layer
+
+The workspace now includes a Supabase adapter that preserves the existing
+IndexedDB/JSON data shapes. The six embedded dashboards continue to use their
+existing storage APIs; the top-level iframe bridge routes these mapped stores
+to `app_state` when an authenticated Supabase session is present.
+
+### Setup
+
+1. Create/open the Supabase project.
+2. Run `supabase_schema.sql` in the Supabase SQL Editor.
+3. Run `supabase_seed.sql`.
+4. Create an Auth user in Supabase Authentication.
+5. Add the matching `app_users` row using that Auth user's UUID, as described
+   at the end of `supabase_schema.sql`.
+6. Edit `supabase-config.js` and replace `YOUR-PROJECT` and
+   `YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY`.
+7. Open `/supabase_migrate.html`, sign in with the Supabase Auth account and
+   click **Inspect local data**, then **Migrate mapped stores**.
+8. Keep the browser's original local data until the cloud data has been
+   verified.
+
+The public/publishable (anon) key may be present in browser code only because
+RLS is enabled by `supabase_schema.sql`. Never put a Supabase service-role key
+in `supabase-config.js`.
+
+`att_fs` is intentionally not migrated: it is a browser-local
+`FileSystemDirectoryHandle` used for screenshot backup folders. Each user must
+choose their folder again on their device.
+
+`hw_workspace` passwords are not migrated. Supabase Auth owns passwords.

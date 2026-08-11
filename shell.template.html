@@ -139,6 +139,11 @@
   #topbar .navbtn{ font-size: 12px; padding: 7px 10px; }
 }
 </style>
+  <!-- Supabase cloud data layer. The dashboard UI remains unchanged; the
+       existing iframe storage bridge routes mapped stores to Supabase. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="hw-supabase.js"></script>
 </head>
 <body>
 
@@ -149,7 +154,7 @@
       <div id="lgErr"></div>
       <div id="lgOk"></div>
       <form id="lgForm">
-        <div class="lg-field"><label for="lgUser">Username</label><input id="lgUser" type="text" autocomplete="username" spellcheck="false" autocapitalize="none" autocorrect="off"></div>
+        <div class="lg-field"><label for="lgUser">Username or email</label><input id="lgUser" type="text" autocomplete="username" spellcheck="false" autocapitalize="none" autocorrect="off"></div>
         <div class="lg-field" id="lgPassField" style="display:none"><label for="lgPass">Password</label><div class="lg-pwwrap"><input id="lgPass" type="password" autocomplete="current-password"><button type="button" id="lgEye" tabindex="-1" aria-label="Show password">👁</button></div></div>
         <div class="lg-row" id="lgRememberRow" style="display:none"><input id="lgRemember" type="checkbox"><label for="lgRemember">Keep me signed in for 30 days</label></div>
         <button id="lgBtn" type="button">Continue</button>
@@ -389,8 +394,24 @@
   }
   function ck(db, store, key){ return db + SEP + store + SEP + key; }
   function txWrite(fn){ return bridgeDB().then(function(d){ return new Promise(function(res, rej){ var tx = d.transaction('kv','readwrite'); fn(tx.objectStore('kv')); tx.oncomplete = function(){ res(); }; tx.onerror = function(){ rej(tx.error); }; }); }); }
-  function bridgePut(db, store, key, value){ return txWrite(function(st){ try{ st.put(value, ck(db,store,key)); }catch(e){} }); }
-  function bridgeDel(db, store, key){ return txWrite(function(st){ st['delete'](ck(db,store,key)); }); }
+  function bridgePutLocal(db, store, key, value){ return txWrite(function(st){ try{ st.put(value, ck(db,store,key)); }catch(e){} }); }
+  function bridgeDelLocal(db, store, key){ return txWrite(function(st){ st['delete'](ck(db,store,key)); }); }
+  var __cloudReady = (window.HWCloud && window.HWCloud.status)
+    ? window.HWCloud.status().then(function(st){ return !!(st && st.configured && st.authenticated); }).catch(function(){ return false; })
+    : Promise.resolve(false);
+  function cloudOn(){ return __cloudReady; }
+  function bridgePut(db, store, key, value){
+    return cloudOn().then(function(on){
+      if(on) return HWCloud.put(db,store,key,value).catch(function(){ return bridgePutLocal(db,store,key,value); });
+      return bridgePutLocal(db,store,key,value);
+    });
+  }
+  function bridgeDel(db, store, key){
+    return cloudOn().then(function(on){
+      if(on) return HWCloud.del(db,store,key).catch(function(){ return bridgeDelLocal(db,store,key); });
+      return bridgeDelLocal(db,store,key);
+    });
+  }
   function rangeDelete(prefix){
     return bridgeDB().then(function(d){ return new Promise(function(res, rej){
       var tx = d.transaction('kv','readwrite'), st = tx.objectStore('kv');
@@ -402,7 +423,7 @@
   }
   function bridgeClr(db, store){ return rangeDelete(db + SEP + store + SEP); }
   function bridgeClrDb(db){ return rangeDelete(db + SEP); }
-  function bridgeReadDb(db){
+  function bridgeReadDbLocal(db){
     return bridgeDB().then(function(d){ return new Promise(function(res, rej){
       var out = {}, tx = d.transaction('kv','readonly'), st = tx.objectStore('kv');
       var range = IDBKeyRange.bound(db + SEP, db + SEP + '\uffff');
@@ -413,6 +434,12 @@
       };
       c.onerror = function(){ rej(c.error); };
     }); });
+  }
+  function bridgeReadDb(db){
+    return cloudOn().then(function(on){
+      if(on) return HWCloud.readDb(db).catch(function(){ return bridgeReadDbLocal(db); });
+      return bridgeReadDbLocal(db);
+    });
   }
 
   /* ---------------- live cross-tab sync ---------------- */
@@ -432,7 +459,7 @@
       case 'idb-open': bridgeReadDb(m.db).then(function(data){ reply({data:data}); }).catch(function(){ reply({data:{}}); }); break;
       case 'idb-put': bridgePut(m.db, m.store, m.key, m.value).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, key:m.key, value:m.value}); break;
       case 'idb-del': bridgeDel(m.db, m.store, m.key).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, key:m.key, del:1}); break;
-      case 'idb-clr': bridgeClr(m.db, m.store).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, clr:1}); break;
+      case 'idb-clr': cloudOn().then(function(on){ return on && HWCloud.dbScope(m.db) ? HWCloud.clear(m.db,m.store).catch(function(){ return bridgeClr(m.db,m.store); }) : bridgeClr(m.db,m.store); }).catch(function(){}); broadcast(e.source, {__hwb:1, op:'idb-ext', db:m.db, store:m.store, clr:1}); break;
       case 'idb-deldb': bridgeClrDb(m.db).catch(function(){}); break;
       case 'goto':
         // a dashboard asking the workspace to switch to another tab
@@ -1531,6 +1558,46 @@ function _initLoginGateReal(startWorkspace){
     if (bk) bk.addEventListener('click', function(){ msg(errEl, ''); lgShowStep('user'); });
   })();
 
+  function tryCloudLogin(email, password, remember){
+    if (!window.HWCloud || !HWCloud.configured || !email || email.indexOf('@') < 1) return Promise.resolve(false);
+    return HWCloud.signIn(email, password).then(function(){
+      return HWCloud.profile();
+    }).then(function(profile){
+      if (!profile || !profile.username) throw new Error('Supabase user exists but no app_users profile was found.');
+      var tabs = profile.tabs && profile.tabs.length ? profile.tabs : (profile.role === 'admin' ? '*' : []);
+      _usersCache = { v:2, users:{} };
+      _usersCache.users[String(profile.username).toLowerCase()] = {
+        role: profile.role || 'user',
+        tabs: tabs,
+        created: Date.now(),
+        att: { role: profile.att_role || 'employee', emp: profile.att_employee || '' }
+      };
+      saveAuth(String(profile.username).toLowerCase(), !!remember);
+      openWorkspace(String(profile.username).toLowerCase());
+      return true;
+    });
+  }
+
+  function tryCloudLogin(email, password, remember){
+    if (!window.HWCloud || !HWCloud.configured || !email || email.indexOf('@') < 1) return Promise.resolve(false);
+    return HWCloud.signIn(email, password).then(function(){
+      return HWCloud.profile();
+    }).then(function(profile){
+      if (!profile || !profile.username) throw new Error('Supabase user exists but no app_users profile was found.');
+      var tabs = profile.tabs && profile.tabs.length ? profile.tabs : (profile.role === 'admin' ? '*' : []);
+      _usersCache = { v:2, users:{} };
+      _usersCache.users[String(profile.username).toLowerCase()] = {
+        role: profile.role || 'user',
+        tabs: tabs,
+        created: Date.now(),
+        att: { role: profile.att_role || 'employee', emp: profile.att_employee || '' }
+      };
+      saveAuth(String(profile.username).toLowerCase(), !!remember);
+      openWorkspace(String(profile.username).toLowerCase());
+      return true;
+    });
+  }
+
   function attempt(){
     var u = (uEl.value || '').trim().toLowerCase();
     var p = pEl.value || '';
@@ -1543,6 +1610,17 @@ function _initLoginGateReal(startWorkspace){
     }
     if (!p) return fail('Enter your password.');
     btn.disabled = true; btn.textContent = 'Checking\u2026';
+    if (window.HWCloud && HWCloud.configured && u.indexOf('@') > 0){
+      tryCloudLogin(u, p, !!(rEl && rEl.checked)).then(function(done){
+        if (!done) {
+          btn.disabled = false; btn.textContent = 'Sign in';
+          fail('Cloud sign-in was not available.');
+        }
+      }).catch(function(e){
+        fail('Cloud sign-in failed: ' + (e && e.message ? e.message : e));
+      });
+      return;
+    }
     setTimeout(function(){
       try {
         var rec = getDB().users[u];
@@ -2023,7 +2101,7 @@ function _initLoginGateReal(startWorkspace){
   if (fpNext) fpNext.addEventListener('click', function(ev){ ev.preventDefault(); fpStart(); });
   var fpBtn = document.getElementById('fpBtn');
   if (fpBtn) fpBtn.addEventListener('click', function(ev){ ev.preventDefault(); fpDoReset(); });
-  if (outBtn) outBtn.addEventListener('click', function(){ clearAuth(); location.reload(); });
+  if (outBtn) outBtn.addEventListener('click', function(){ clearAuth(); if(window.HWCloud && HWCloud.configured){ HWCloud.signOut().catch(function(){}); } location.reload(); });
   if (usersBtn) usersBtn.addEventListener('click', openUsers);
   var umClose = document.getElementById('umClose');
   if (umClose) umClose.addEventListener('click', closeUsers);
@@ -2036,6 +2114,28 @@ function _initLoginGateReal(startWorkspace){
   if (modal) modal.addEventListener('click', function(ev){ if (ev.target === modal) closeUsers(); });
 
   /* users hydrated before this runs */
+  if (window.HWCloud && HWCloud.configured) {
+    HWCloud.session().then(function(sess){
+      if (!sess) return false;
+      return HWCloud.profile().then(function(profile){
+        if (!profile || !profile.username) return false;
+        var u = String(profile.username).toLowerCase();
+        _usersCache = { v:2, users:{} };
+        _usersCache.users[u] = {
+          role: profile.role || 'user',
+          tabs: profile.tabs && profile.tabs.length ? profile.tabs : (profile.role === 'admin' ? '*' : []),
+          created: Date.now(),
+          att: { role: profile.att_role || 'employee', emp: profile.att_employee || '' }
+        };
+        authedUser = u;
+        var allowedCloud = applyAccess(u);
+        if (!allowedCloud.length) return false;
+        gate.style.display = 'none';
+        startWorkspace(allowedCloud[0]);
+        return true;
+      });
+    }).catch(function(){});
+  }
   var existing = readAuth();
   if (existing){
     authedUser = existing.u;
